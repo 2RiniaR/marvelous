@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, Dict
 from dataclasses import dataclass
 import datetime
 import json
@@ -42,12 +42,17 @@ class SurvivalSettings:
     reset_time: datetime.time
 
 
+@dataclass()
+class MessageSettings:
+    strict_time: float
+
+
 class AppSettings:
     marvelous: MarvelousSettings
     super_marvelous: SuperMarvelousSettings
     booing: BooingSettings
     survival: SurvivalSettings
-    message: bool
+    message: MessageSettings
 
     def load_from_file(self, path: str) -> None:
         with open(path, "r") as f:
@@ -89,7 +94,9 @@ class AppSettings:
             reset_time=datetime.datetime.strptime(settings["survival"]["reset_time"], "%H:%M").time()
         )
 
-        self.message = settings["survival"] == "on"
+        self.message = MessageSettings(
+            strict_time=float(settings["message"]["strict_time"])
+        )
 
 
 app_settings = AppSettings()
