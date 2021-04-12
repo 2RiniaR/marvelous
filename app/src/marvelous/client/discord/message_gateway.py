@@ -6,13 +6,17 @@ from marvelous.settings import app_settings
 class DiscordMessageGateway:
     strict: bool
 
-    async def send_message(self, text: str, channel: discord.TextChannel, mode: str):
-        if mode == "all":
-            await channel.send(text)
-        elif mode == "strict":
-            await self.send_message_strict(text, channel)
+    def __init__(self):
+        self.loop = asyncio.get_event_loop()
+        self.strict = False
 
-    async def send_message_strict(self, text: str, channel: discord.TextChannel):
+    async def send_force(self, text: str, channel: discord.TextChannel):
+        await channel.send(text)
+
+    async def send(self, text: str, channel: discord.TextChannel):
+        asyncio.ensure_future(self.__send_with_strict_lock(text, channel), loop=self.loop)
+
+    async def __send_with_strict_lock(self, text: str, channel: discord.TextChannel):
         if self.strict:
             return
         self.strict = True
