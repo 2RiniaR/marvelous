@@ -12,6 +12,7 @@ services:
       TZ: "Asia/Tokyo"
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
+      - ./db/data:/var/lib/mysql
       - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -20,7 +21,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./app/Dockerfile.dev
+      dockerfile: ./app/Dockerfile
     tty: true
     working_dir: /app/src
     entrypoint: python ./runner.py
