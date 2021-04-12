@@ -30,5 +30,6 @@
   "survival": {
     "point": "1",
     "reset_time": "04:00"
-  }
+  },
+  "message": "off"
 }

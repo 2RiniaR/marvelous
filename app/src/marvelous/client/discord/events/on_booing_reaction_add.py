@@ -8,13 +8,15 @@ async def succeed(reaction: discord.Reaction, user: discord.User, booing: Booing
     sender: discord.User = user
     receiver: discord.User = reaction.message.author
     channel: discord.TextChannel = reaction.message.channel
-    message = (
-        f"**:middle_finger: カス！** が **{sender.name}** から **{receiver.name}** へ送られました！    "
-        f"{receiver.name} :clap:{'{:+}'.format(booing.result.receiver_point_diff)}"
-    )
-    if booing.result.sender_penalty_diff != 0:
-        message += f"\n**ペナルティ！**    {sender.name} :clap: {'{:+}'.format(booing.result.sender_point_diff)}"
-    await channel.send(message)
+
+    if app_settings.message:
+        message = (
+            f"**:middle_finger: カス！** が **{sender.name}** から **{receiver.name}** へ送られました！    "
+            f"{receiver.name} :clap:{'{:+}'.format(booing.result.receiver_point_diff)}"
+        )
+        if booing.result.sender_penalty_diff != 0:
+            message += f"\n**ペナルティ！**    {sender.name} :clap: {'{:+}'.format(booing.result.sender_point_diff)}"
+        await channel.send(message)
 
 
 async def failed(reaction: discord.Reaction, user: discord.User, message: str):

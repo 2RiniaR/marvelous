@@ -9,7 +9,8 @@ from marvelous.client.discord.actions.register_user_implicit import register_use
 
 async def succeed(message: discord.Message):
     author: discord.User = message.author
-    await message.channel.send(f"{author.name}、今日も生きててえらいね！  :clap: +1")
+    if app_settings.message:
+        await message.channel.send(f"{author.name}、今日も生きててえらいね！  :clap: +1")
 
 
 @commands.Cog.listener()

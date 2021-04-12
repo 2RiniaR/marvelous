@@ -10,14 +10,15 @@ async def succeed(reaction: discord.Reaction, user: discord.User, super_marvelou
     receiver: discord.User = reaction.message.author
     channel: discord.TextChannel = reaction.message.channel
 
-    message = ":raised_hands:    " * 3 + "**" + str(receiver.name) + "**" + "    :raised_hands:" * 3
-    message += (
-        f"\n**:raised_hands: めっちゃえらい！** が **{sender.name}** から **{receiver.name}** へ送られました！    "
-        f"{receiver.name} :clap:{'{:+}'.format(super_marvelous.result.receiver_point_diff)}\n"
-        f"**ボーナス！**    {sender.name} :clap: {'{:+}'.format(super_marvelous.result.sender_point_diff)}"
-    )
-    await channel.send(message)
-    await show_super_marvelous_count(sender.id, channel)
+    if app_settings.message:
+        message = ":raised_hands:    " * 3 + "**" + str(receiver.name) + "**" + "    :raised_hands:" * 3
+        message += (
+            f"\n**:raised_hands: めっちゃえらい！** が **{sender.name}** から **{receiver.name}** へ送られました！    "
+            f"{receiver.name} :clap:{'{:+}'.format(super_marvelous.result.receiver_point_diff)}\n"
+            f"**ボーナス！**    {sender.name} :clap: {'{:+}'.format(super_marvelous.result.sender_point_diff)}"
+        )
+        await channel.send(message)
+        await show_super_marvelous_count(sender.id, channel)
 
 
 async def no_left_count(reaction: discord.Reaction, user: discord.User, super_marvelous: SuperMarvelousReaction):
