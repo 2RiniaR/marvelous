@@ -1,8 +1,10 @@
 from discord.ext import commands
 import discord
-from marvelous.usecases.get_user import get_user, UserNotFoundError
+from marvelous.usecases.get_user import get_user, is_user_exist, UserNotFoundError
 from marvelous.models.user import User
 from marvelous.settings import app_settings
+from marvelous.client.discord.actions.register_user_implicit import register_user_implicit
+from marvelous.client.discord.message_gateway import message_gateway
 
 
 def get_user_status_message(user: User) -> str:
@@ -34,15 +36,16 @@ async def me(ctx: commands.Context):
     author: discord.User = ctx.message.author
     channel: discord.TextChannel = ctx.channel
 
+    if is_user_exist(author.id):
+        await register_user_implicit(author, channel)
+
     try:
         user = get_user(author.id)
     except UserNotFoundError as e:
-        message = ":no_entry: ユーザーが登録されていません"
-        await channel.send(message)
         return
 
     message = get_user_status_message(user)
-    await channel.send(message)
+    await message_gateway.send(message, channel)
 
 
 def setup(bot: commands.Bot):

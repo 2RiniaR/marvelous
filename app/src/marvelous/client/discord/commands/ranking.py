@@ -3,6 +3,7 @@ import discord
 from marvelous.usecases.get_ranking import get_ranking
 from marvelous.models.user import User
 from typing import Iterable
+from marvelous.client.discord.message_gateway import message_gateway
 
 
 def get_ranking_message(users: Iterable[User]) -> str:
@@ -24,7 +25,7 @@ async def ranking(ctx: commands.Context):
 
     users = get_ranking()
     message = get_ranking_message(users)
-    await channel.send(message)
+    await message_gateway.send(message, channel)
 
 
 def setup(bot: commands.Bot):

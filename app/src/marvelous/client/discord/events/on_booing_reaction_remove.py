@@ -2,6 +2,7 @@ import discord
 from marvelous.usecases.send_reaction import cancel_reaction
 from marvelous.models.reaction import BooingReaction, BooingSettings
 from marvelous.settings import app_settings
+from marvelous.client.discord.message_gateway import message_gateway
 
 
 async def succeed(reaction: discord.Reaction, user: discord.User, booing: BooingReaction):
@@ -9,11 +10,8 @@ async def succeed(reaction: discord.Reaction, user: discord.User, booing: Booing
     receiver: discord.User = reaction.message.author
     channel: discord.TextChannel = reaction.message.channel
 
-    if app_settings.message:
-        message = (
-            f":x: :middle_finger: カス！  {sender.name} --> {receiver.name}"
-        )
-        await channel.send(message)
+    message = f":x: :middle_finger: カス！  {sender.name} --> {receiver.name}"
+    await message_gateway.send(message, channel)
 
 
 async def failed(reaction: discord.Reaction, user: discord.User, message: str):
