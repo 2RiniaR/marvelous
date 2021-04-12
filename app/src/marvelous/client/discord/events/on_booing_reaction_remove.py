@@ -8,10 +8,12 @@ async def succeed(reaction: discord.Reaction, user: discord.User, booing: Booing
     sender: discord.User = user
     receiver: discord.User = reaction.message.author
     channel: discord.TextChannel = reaction.message.channel
-    message = (
-        f":x: :middle_finger: カス！  {sender.name} --> {receiver.name}"
-    )
-    await channel.send(message)
+
+    if app_settings.message:
+        message = (
+            f":x: :middle_finger: カス！  {sender.name} --> {receiver.name}"
+        )
+        await channel.send(message)
 
 
 async def failed(reaction: discord.Reaction, user: discord.User, message: str):

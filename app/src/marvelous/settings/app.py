@@ -47,6 +47,7 @@ class AppSettings:
     super_marvelous: SuperMarvelousSettings
     booing: BooingSettings
     survival: SurvivalSettings
+    message: bool
 
     def load_from_file(self, path: str) -> None:
         with open(path, "r") as f:
@@ -87,6 +88,8 @@ class AppSettings:
             point=int(settings["survival"]["point"]),
             reset_time=datetime.datetime.strptime(settings["survival"]["reset_time"], "%H:%M").time()
         )
+
+        self.message = settings["survival"] == "on"
 
 
 app_settings = AppSettings()

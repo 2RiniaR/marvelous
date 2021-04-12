@@ -8,13 +8,15 @@ async def succeed(reaction: discord.Reaction, user: discord.User, marvelous: Mar
     sender: discord.User = user
     receiver: discord.User = reaction.message.author
     channel: discord.TextChannel = reaction.message.channel
-    message = (
-        f"**:clap: えらい！** が **{sender.name}** から **{receiver.name}** へ送られました！"
-        f"{receiver.name} :clap:{'{:+}'.format(marvelous.result.receiver_point_diff)}"
-    )
-    if marvelous.result.sender_bonus_diff != 0:
-        message += f"\n**ボーナス！**    {sender.name} :clap: {'{:+}'.format(marvelous.result.sender_point_diff)}"
-    await channel.send(message)
+
+    if app_settings.message:
+        message = (
+            f"**:clap: えらい！** が **{sender.name}** から **{receiver.name}** へ送られました！"
+            f"{receiver.name} :clap:{'{:+}'.format(marvelous.result.receiver_point_diff)}"
+        )
+        if marvelous.result.sender_bonus_diff != 0:
+            message += f"\n**ボーナス！**    {sender.name} :clap: {'{:+}'.format(marvelous.result.sender_point_diff)}"
+        await channel.send(message)
 
 
 async def failed(reaction: discord.Reaction, user: discord.User, message: str):

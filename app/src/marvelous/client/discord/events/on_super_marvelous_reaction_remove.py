@@ -10,9 +10,10 @@ async def succeed(reaction: discord.Reaction, user: discord.User, super_marvelou
     receiver: discord.User = reaction.message.author
     channel: discord.TextChannel = reaction.message.channel
 
-    message = f":x: :raised_hands: めっちゃえらい！  {sender.name} --> {receiver.name}"
-    await channel.send(message)
-    await show_super_marvelous_count(sender.id, channel)
+    if app_settings.message:
+        message = f":x: :raised_hands: めっちゃえらい！  {sender.name} --> {receiver.name}"
+        await channel.send(message)
+        await show_super_marvelous_count(sender.id, channel)
 
 
 async def failed(reaction: discord.Reaction, user: discord.User, message: str):
