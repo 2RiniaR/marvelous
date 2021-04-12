@@ -3,6 +3,7 @@ from marvelous.usecases.send_reaction import send_reaction
 from marvelous.models.reaction import SuperMarvelousReaction, SuperMarvelousSettings
 from marvelous.settings import app_settings
 from marvelous.client.discord.actions.show_super_marvelous_count import show_super_marvelous_count
+from marvelous.client.discord.message_gateway import message_gateway
 
 
 async def succeed(reaction: discord.Reaction, user: discord.User, super_marvelous: SuperMarvelousReaction):
@@ -10,15 +11,14 @@ async def succeed(reaction: discord.Reaction, user: discord.User, super_marvelou
     receiver: discord.User = reaction.message.author
     channel: discord.TextChannel = reaction.message.channel
 
-    if app_settings.message:
-        message = ":raised_hands:    " * 3 + "**" + str(receiver.name) + "**" + "    :raised_hands:" * 3
-        message += (
-            f"\n**:raised_hands: めっちゃえらい！** が **{sender.name}** から **{receiver.name}** へ送られました！    "
-            f"{receiver.name} :clap:{'{:+}'.format(super_marvelous.result.receiver_point_diff)}\n"
-            f"**ボーナス！**    {sender.name} :clap: {'{:+}'.format(super_marvelous.result.sender_point_diff)}"
-        )
-        await channel.send(message)
-        await show_super_marvelous_count(sender.id, channel)
+    message = ":raised_hands:    " * 3 + "**" + str(receiver.name) + "**" + "    :raised_hands:" * 3
+    message += (
+        f"\n**:raised_hands: めっちゃえらい！** が **{sender.name}** から **{receiver.name}** へ送られました！    "
+        f"{receiver.name} :clap:{'{:+}'.format(super_marvelous.result.receiver_point_diff)}\n"
+        f"**ボーナス！**    {sender.name} :clap: {'{:+}'.format(super_marvelous.result.sender_point_diff)}"
+    )
+    await message_gateway.send(message, channel)
+    await show_super_marvelous_count(sender.id, channel)
 
 
 async def no_left_count(reaction: discord.Reaction, user: discord.User, super_marvelous: SuperMarvelousReaction):
@@ -26,7 +26,7 @@ async def no_left_count(reaction: discord.Reaction, user: discord.User, super_ma
     channel: discord.TextChannel = reaction.message.channel
 
     message = f":no_entry: {sender.name} >>> 「めっちゃえらい！」の残り使用回数が0です"
-    await channel.send(message)
+    await message_gateway.send(message, channel)
     await show_super_marvelous_count(sender.id, channel)
 
 

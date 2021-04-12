@@ -2,6 +2,7 @@ import discord
 from marvelous.usecases.send_reaction import send_reaction
 from marvelous.models.reaction import BooingReaction, BooingSettings
 from marvelous.settings import app_settings
+from marvelous.client.discord.message_gateway import message_gateway
 
 
 async def succeed(reaction: discord.Reaction, user: discord.User, booing: BooingReaction):
@@ -9,14 +10,13 @@ async def succeed(reaction: discord.Reaction, user: discord.User, booing: Booing
     receiver: discord.User = reaction.message.author
     channel: discord.TextChannel = reaction.message.channel
 
-    if app_settings.message:
-        message = (
-            f"**:middle_finger: カス！** が **{sender.name}** から **{receiver.name}** へ送られました！    "
-            f"{receiver.name} :clap:{'{:+}'.format(booing.result.receiver_point_diff)}"
-        )
-        if booing.result.sender_penalty_diff != 0:
-            message += f"\n**ペナルティ！**    {sender.name} :clap: {'{:+}'.format(booing.result.sender_point_diff)}"
-        await channel.send(message)
+    message = (
+        f"**:middle_finger: カス！** が **{sender.name}** から **{receiver.name}** へ送られました！    "
+        f"{receiver.name} :clap:{'{:+}'.format(booing.result.receiver_point_diff)}"
+    )
+    if booing.result.sender_penalty_diff != 0:
+        message += f"\n**ペナルティ！**    {sender.name} :clap: {'{:+}'.format(booing.result.sender_point_diff)}"
+    await message_gateway.send(message, channel)
 
 
 async def failed(reaction: discord.Reaction, user: discord.User, message: str):

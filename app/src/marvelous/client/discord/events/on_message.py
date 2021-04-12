@@ -1,16 +1,16 @@
 import discord
 from discord.ext import commands
-import marvelous.settings
 from marvelous.usecases.give_survival_bonus import give_survival_bonus
 from marvelous.usecases.get_user import is_user_exist, UserNotFoundError
 from marvelous.settings import app_settings
 from marvelous.client.discord.actions.register_user_implicit import register_user_implicit
+from marvelous.client.discord.message_gateway import message_gateway
 
 
 async def succeed(message: discord.Message):
     author: discord.User = message.author
-    if app_settings.message:
-        await message.channel.send(f"{author.name}、今日も生きててえらいね！  :clap: +1")
+    text = f"{author.name}、今日も生きててえらいね！  :clap: +1"
+    await message_gateway.send(text, message.channel)
 
 
 @commands.Cog.listener()

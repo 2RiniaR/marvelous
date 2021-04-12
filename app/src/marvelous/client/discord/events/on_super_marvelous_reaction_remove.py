@@ -3,6 +3,7 @@ from marvelous.usecases.send_reaction import cancel_reaction
 from marvelous.models.reaction import SuperMarvelousReaction, SuperMarvelousSettings
 from marvelous.settings import app_settings
 from marvelous.client.discord.actions.show_super_marvelous_count import show_super_marvelous_count
+from marvelous.client.discord.message_gateway import message_gateway
 
 
 async def succeed(reaction: discord.Reaction, user: discord.User, super_marvelous: SuperMarvelousReaction):

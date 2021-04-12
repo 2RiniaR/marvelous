@@ -4,6 +4,7 @@ from marvelous.usecases.get_user import get_user, is_user_exist, UserNotFoundErr
 from marvelous.models.user import User
 from marvelous.settings import app_settings
 from marvelous.client.discord.actions.register_user_implicit import register_user_implicit
+from marvelous.client.discord.message_gateway import message_gateway
 
 
 def get_user_status_message(user: User) -> str:
@@ -44,7 +45,7 @@ async def me(ctx: commands.Context):
         return
 
     message = get_user_status_message(user)
-    await channel.send(message)
+    await message_gateway.send(message, channel)
 
 
 def setup(bot: commands.Bot):
