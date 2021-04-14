@@ -52,6 +52,6 @@ class SuperMarvelousReaction(Reaction):
         receiver.point -= self.settings.receiver_point
         self.result = SuperMarvelousResult(
             no_left_count=False,
-            sender_point_diff=self.settings.sender_point,
-            receiver_point_diff=self.settings.receiver_point
+            sender_point_diff=-self.settings.sender_point,
+            receiver_point_diff=-self.settings.receiver_point
         )
