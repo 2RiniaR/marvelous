@@ -1,0 +1,8 @@
+build:
+  docker:
+    web: app/Dockerfile
+run:
+  web:
+    command:
+      - cd /app/src
+      - python runner.py
