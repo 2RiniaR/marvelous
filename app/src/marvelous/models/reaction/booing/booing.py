@@ -39,8 +39,8 @@ class BooingReaction(Reaction):
 
         self.result = BooingResult(
             sender_penalty_diff=penalty,
-            sender_point_diff=sender_point_before - sender.point,
-            receiver_point_diff=receiver_point_before - receiver.point
+            sender_point_diff=sender.point - sender_point_before,
+            receiver_point_diff=receiver.point - receiver_point_before
         )
 
     def cancel(self, sender: User, receiver: User):
@@ -57,6 +57,6 @@ class BooingReaction(Reaction):
 
         self.result = BooingResult(
             sender_penalty_diff=penalty,
-            sender_point_diff=sender_point_before - sender.point,
-            receiver_point_diff=receiver_point_before - receiver.point
+            sender_point_diff=sender.point - sender_point_before,
+            receiver_point_diff=receiver.point - receiver_point_before
         )

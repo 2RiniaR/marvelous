@@ -51,25 +51,25 @@ class AddStepCase:
 
 
 add_step_cases = {
-    "ループを伴わない増加":
+    "case0":
         AddStepCase(before_self=DailyBonus(step=0, today=0), step=1, today_limit=10, step_interval=5,
                     max_available_step=1, expected_self=DailyBonus(step=1, today=1), expected_return_value=0),
-    "ループを伴う増加":
+    "case1":
         AddStepCase(before_self=DailyBonus(step=4, today=1), step=3, today_limit=10, step_interval=5,
                     max_available_step=3, expected_self=DailyBonus(step=2, today=4), expected_return_value=1),
-    "test_get_max_available_step(step) < step となる場合":
+    "case2":
         AddStepCase(before_self=DailyBonus(step=3, today=10), step=2, today_limit=10, step_interval=5,
                     max_available_step=0, expected_self=DailyBonus(step=3, today=12), expected_return_value=0),
-    "ループを伴わない減少":
+    "case3":
         AddStepCase(before_self=DailyBonus(step=4, today=3), step=-1, today_limit=10, step_interval=5,
                     max_available_step=-1, expected_self=DailyBonus(step=3, today=2), expected_return_value=0),
-    "ループを伴う減少":
+    "case4":
         AddStepCase(before_self=DailyBonus(step=1, today=7), step=-3, today_limit=10, step_interval=5,
                     max_available_step=-3, expected_self=DailyBonus(step=3, today=4), expected_return_value=-1),
-    "today + test_get_max_available_step(step) < 0 となる場合、today は 0 となる":
+    "case5":
         AddStepCase(before_self=DailyBonus(step=4, today=1), step=-3, today_limit=10, step_interval=5,
                     max_available_step=-3, expected_self=DailyBonus(step=1, today=0), expected_return_value=0),
-    "一切の変更がない場合":
+    "case6":
         AddStepCase(before_self=DailyBonus(step=0, today=0), step=0, today_limit=10, step_interval=5,
                     max_available_step=0, expected_self=DailyBonus(step=0, today=0), expected_return_value=0),
 }
