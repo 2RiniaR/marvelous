@@ -1,14 +1,16 @@
-from marvelous.data_store.mysql import mysql_client
 import mysql.connector
+from marvelous.data_store.mysql.connection import connection
 
 
 def reset_super_marvelous_left(value: int) -> None:
-    query = "UPDATE users SET super_marvelous_left = %s"
-    cursor = mysql_client.connection.cursor()
+    query = "UPDATE users SET super_marvelous_left = %(count)s"
+    params = {"count": value}
 
-    try:
-        cursor.execute(query, value)
-        mysql_client.connection.commit()
-    except mysql.connector.Error as e:
-        mysql_client.connection.rollback()
-        raise e
+    with connection() as client:
+        cursor = client.connection.cursor()
+        try:
+            cursor.execute(query, params)
+            client.connection.commit()
+        except mysql.connector.Error as e:
+            client.connection.rollback()
+            raise e
