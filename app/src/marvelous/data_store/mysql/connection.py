@@ -79,7 +79,7 @@ class MySQLClient:
         try:
             self.connection = mysql.connector.connect(
                 host=self.host, port=self.port, user=self.user, password=self.password, database=self.database,
-                pool_size=self.pool_size, pool_name=self.pool_name
+                pool_size=self.pool_size, pool_name=self.pool_name, pool_reset_session=False
             )
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
