@@ -5,4 +5,4 @@ cd ..
 
 docker-compose -f ./docker-compose.dev.yml down
 sudo rm -r ./db/data
-./bin/start-docker-compose.sh
+./bin/start.sh

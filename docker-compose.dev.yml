@@ -19,13 +19,9 @@ services:
 
   app:
     build:
-      context: .
-      dockerfile: ./app/Dockerfile.dev
+      context: ./app
+      dockerfile: Dockerfile.dev
     tty: true
-    working_dir: /app/src
-    entrypoint: python ./runner.py
-    environment:
-      TZ: "Asia/Tokyo"
     env_file:
       - .env
     depends_on:
