@@ -1,6 +1,6 @@
 import mysql.connector
 from mysql.connector import errorcode
-import marvelous.settings
+import marvelous.settings.env as env
 from typing import Union, Optional
 from logging import getLogger
 import asyncio
@@ -35,11 +35,12 @@ async def wait_ready():
 
 def connection():
     return MySQLClient(
-        host=marvelous.settings.env.mysql_host,
-        port=marvelous.settings.env.mysql_port,
-        user=marvelous.settings.env.mysql_user,
-        password=marvelous.settings.env.mysql_password,
-        database=marvelous.settings.env.mysql_database
+        host=env.mysql_host,
+        port=env.mysql_port,
+        user=env.mysql_user,
+        password=env.mysql_password,
+        database=env.mysql_database,
+        pool_size=env.mysql_pool_size
     )
 
 
@@ -49,14 +50,17 @@ class MySQLClient:
     user: str
     password: str
     database: str
+    pool_size: int
+    pool_name: str = "mysql"
     connection: Optional[Union[mysql.connector.CMySQLConnection, mysql.connector.MySQLConnection]]
 
-    def __init__(self, host: str, port: str, user: str, password: str, database: str):
+    def __init__(self, host: str, port: str, user: str, password: str, database: str, pool_size: int):
         self.host = host
         self.port = port
         self.user = user
         self.password = password
         self.database = database
+        self.pool_size = pool_size
         self.connection = None
 
     def __enter__(self):
@@ -74,7 +78,8 @@ class MySQLClient:
 
         try:
             self.connection = mysql.connector.connect(
-                host=self.host, port=self.port, user=self.user, password=self.password, database=self.database
+                host=self.host, port=self.port, user=self.user, password=self.password, database=self.database,
+                pool_size=self.pool_size, pool_name=self.pool_name
             )
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
