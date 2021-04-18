@@ -1,7 +1,6 @@
 import pytest
 import pytest_mock
 from unittest.mock import MagicMock
-from src.marvelous.usecases.get_ranking import *
 
 
 @pytest.fixture()

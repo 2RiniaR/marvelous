@@ -1,9 +1,9 @@
-from marvelous.models.user import User
+from marvelous.models.entities import User
 import mysql.connector
-from marvelous.data_store.mysql.connection import connection
+from .. import connection
 
 
-def update(user: User) -> None:
+def update_user(user: User) -> None:
     query = (
         "UPDATE users SET "
         "display_name=%(display_name)s,"
@@ -32,6 +32,46 @@ def update(user: User) -> None:
         cursor = client.connection.cursor()
         try:
             cursor.execute(query, params)
+            client.connection.commit()
+        except mysql.connector.Error as e:
+            client.connection.rollback()
+            raise e
+
+
+def reset_survival_bonus() -> None:
+    query = "UPDATE users SET survival_bonus_given = 0"
+
+    with connection() as client:
+        cursor = client.connection.cursor()
+        try:
+            cursor.execute(query)
+            client.connection.commit()
+        except mysql.connector.Error as e:
+            client.connection.rollback()
+            raise e
+
+
+def reset_super_marvelous_left(value: int) -> None:
+    query = "UPDATE users SET super_marvelous_left = %(count)s"
+    params = {"count": value}
+
+    with connection() as client:
+        cursor = client.connection.cursor()
+        try:
+            cursor.execute(query, params)
+            client.connection.commit()
+        except mysql.connector.Error as e:
+            client.connection.rollback()
+            raise e
+
+
+def reset_daily_steps() -> None:
+    query = "UPDATE users SET marvelous_bonus_today_step = 0, booing_penalty_today_step = 0"
+
+    with connection() as client:
+        cursor = client.connection.cursor()
+        try:
+            cursor.execute(query)
             client.connection.commit()
         except mysql.connector.Error as e:
             client.connection.rollback()

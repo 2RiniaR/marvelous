@@ -1,8 +1,7 @@
 import pytest_mock
 import pytest
 from unittest.mock import MagicMock, call
-import src.marvelous.usecases.send_reaction as target_package
-from src.marvelous.usecases.send_reaction import *
+import marvelous.models.usecases.reaction as target_package
 
 
 def test_check_self_user_failed(mocker: pytest_mock.MockerFixture):

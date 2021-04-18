@@ -10,7 +10,8 @@ class DiscordMessageGateway:
         self.loop = asyncio.get_event_loop()
         self.strict = False
 
-    async def send_force(self, text: str, channel: discord.TextChannel):
+    @staticmethod
+    async def send_force(text: str, channel: discord.TextChannel):
         await channel.send(text)
 
     async def send(self, text: str, channel: discord.TextChannel):

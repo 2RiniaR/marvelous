@@ -1,4 +1,4 @@
-from typing import Iterable, Dict
+from typing import Iterable
 from dataclasses import dataclass
 import datetime
 import json

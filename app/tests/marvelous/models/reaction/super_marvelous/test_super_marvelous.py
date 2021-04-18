@@ -1,6 +1,6 @@
 import pytest
 import pytest_mock
-from src.marvelous.models.reaction.super_marvelous.super_marvelous import *
+from marvelous.models.events.reaction.super_marvelous.super_marvelous import *
 from dataclasses import dataclass
 
 

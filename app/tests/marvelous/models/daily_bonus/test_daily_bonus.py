@@ -1,7 +1,6 @@
 import pytest
 import pytest_mock
-import src.marvelous.models.daily_bonus.daily_bonus as target_package
-from src.marvelous.models.daily_bonus.daily_bonus import *
+import marvelous.models.parts.daily_bonus as target_package
 from dataclasses import dataclass
 
 

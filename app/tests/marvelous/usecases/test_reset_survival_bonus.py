@@ -1,6 +1,5 @@
 import pytest_mock
 from unittest.mock import MagicMock
-from marvelous.usecases.reset_survival_bonus import *
 
 
 def test_reset_survival_bonus_succeed(mocker: pytest_mock.MockerFixture):

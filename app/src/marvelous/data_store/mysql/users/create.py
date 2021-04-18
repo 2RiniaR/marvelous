@@ -1,10 +1,9 @@
-from marvelous.models.user import User
+from marvelous.models.entities import User
 import mysql.connector
-from marvelous.data_store.mysql.connection import connection
-import mysql.connector
+from .. import connection
 
 
-def create(user: User) -> None:
+def create_user(user: User) -> None:
     query = (
         'INSERT INTO users('
         'discord_id, display_name, marvelous_point, super_marvelous_left, marvelous_bonus_step,'

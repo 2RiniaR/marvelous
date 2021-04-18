@@ -1,0 +1,2 @@
+class ModelError(Exception):
+    pass

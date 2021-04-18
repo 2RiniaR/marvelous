@@ -1,7 +1,6 @@
 import pytest
 import pytest_mock
 from unittest.mock import MagicMock
-from src.marvelous.usecases.get_user import *
 
 
 def test_is_user_exist_true(mocker: pytest_mock.MockerFixture):

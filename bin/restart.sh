@@ -4,5 +4,5 @@ cd `dirname $0`
 cd ..
 
 docker-compose -f ./docker-compose.dev.yml down
-sudo rm -r ./db/data
+#sudo rm -r ./db/data
 ./bin/start.sh

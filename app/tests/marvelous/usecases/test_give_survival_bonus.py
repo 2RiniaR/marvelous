@@ -1,8 +1,7 @@
 import pytest_mock
 import pytest
 from unittest.mock import MagicMock
-import src.marvelous.usecases.give_survival_bonus as target_package
-from src.marvelous.usecases.give_survival_bonus import *
+import marvelous.models.usecases.survival_bonus as target_package
 from dataclasses import dataclass
 
 

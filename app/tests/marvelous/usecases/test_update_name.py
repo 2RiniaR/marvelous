@@ -1,7 +1,6 @@
 import pytest_mock
 from unittest.mock import MagicMock
-import src.marvelous.usecases.update_name as target_package
-from src.marvelous.usecases.update_name import *
+import marvelous.models.usecases.update_name as target_package
 
 
 def test_update_name_succeed(mocker: pytest_mock.MockerFixture):
