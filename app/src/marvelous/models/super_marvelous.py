@@ -1,10 +1,7 @@
 from dataclasses import dataclass
-from ...entities import User
+from .user import User
 from .reaction import Reaction
-
-
-def left_count_is_enough(user: User) -> bool:
-    return user.super_marvelous_left > 0
+import marvelous.data_store as data_store
 
 
 @dataclass()
@@ -55,3 +52,12 @@ class SuperMarvelousReaction(Reaction):
             sender_point_diff=-self.settings.sender_point,
             receiver_point_diff=-self.settings.receiver_point
         )
+
+
+def reset_super_marvelous_left(count: int) -> None:
+    """「めっちゃえらい」の残り使用可能回数をリセットする"""
+    data_store.users.reset_super_marvelous_left(count)
+
+
+def left_count_is_enough(user: User) -> bool:
+    return user.super_marvelous_left > 0

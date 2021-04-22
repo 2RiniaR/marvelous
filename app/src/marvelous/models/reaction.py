@@ -1,7 +1,14 @@
+from .user import User, get_user
 import marvelous.data_store as data_store
-from .user import get_user
-from ..events.reaction import Reaction
-from ..errors import SelfUserReactionError
+from .errors import SelfUserReactionError
+
+
+class Reaction:
+    def send(self, sender: User, receiver: User):
+        pass
+
+    def cancel(self, sender: User, receiver: User):
+        pass
 
 
 def check_self_user(sender_id: int, receiver_id: int):

@@ -1,4 +1,4 @@
-from marvelous.models.usecases import reset_daily_steps
+from marvelous.models.daily_bonus import reset_daily_steps
 from marvelous.settings import app_settings
 from marvelous.helpers import is_now_time
 

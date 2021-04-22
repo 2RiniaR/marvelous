@@ -1,6 +1,6 @@
-from marvelous.models.usecases import reset_survival_bonus
 import discord
-from marvelous.models.usecases import give_survival_bonus, is_user_exist
+from marvelous.models.survival_bonus import reset_survival_bonus, give_survival_bonus
+from marvelous.models.user import is_user_exist
 from marvelous.models.errors import ModelError
 from marvelous.settings import app_settings
 from .user import register_user_implicit

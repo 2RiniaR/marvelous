@@ -1,7 +1,7 @@
 import pytest_mock
 import pytest
 from unittest.mock import MagicMock
-import marvelous.models.usecases.register_user as target_package
+import marvelous.models.services.register_user as target_package
 
 
 def test_register_user_failed_already_exist(mocker: pytest_mock.MockerFixture):

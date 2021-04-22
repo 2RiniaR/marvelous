@@ -1,9 +1,7 @@
 import discord
-from marvelous.models.usecases import register_user
+from marvelous.models.user import register_user, get_user, is_user_exist, User
 from marvelous.helpers import get_initial_user
-from marvelous.models.usecases import get_user, is_user_exist
 from marvelous.models.errors import ModelError
-from marvelous.models.entities import User
 from marvelous.settings import app_settings
 from marvelous.client.discord import message_gateway
 from logging import getLogger

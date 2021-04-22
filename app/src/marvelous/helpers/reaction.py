@@ -1,8 +1,8 @@
 import discord
-from marvelous.models.events import (
-    MarvelousReaction, MarvelousSettings, BooingReaction, BooingSettings,
-    SuperMarvelousReaction, SuperMarvelousSettings, Reaction
-)
+from marvelous.models.super_marvelous import SuperMarvelousReaction, SuperMarvelousSettings
+from marvelous.models.marvelous import MarvelousReaction, MarvelousSettings
+from marvelous.models.booing import BooingReaction, BooingSettings
+from marvelous.models.reaction import Reaction
 from marvelous.settings import app_settings
 
 

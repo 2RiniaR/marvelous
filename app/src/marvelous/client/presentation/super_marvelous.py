@@ -1,9 +1,8 @@
-from marvelous.models.usecases import reset_super_marvelous_left
+from marvelous.models.super_marvelous import reset_super_marvelous_left, SuperMarvelousReaction
 from marvelous.settings import app_settings
 from marvelous.helpers import is_now_time, is_now_weekday
-from marvelous.models.events import SuperMarvelousReaction
-from marvelous.client.discord.reaction_event import ReactionEvent
-from marvelous.client.discord import message_gateway
+from ..discord.reaction import ReactionEvent
+from ..discord import message_gateway
 
 
 async def response_super_marvelous(event: ReactionEvent, reaction: SuperMarvelousReaction):

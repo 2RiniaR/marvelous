@@ -1,6 +1,5 @@
 import discord
-from marvelous.models.usecases import get_ranking
-from marvelous.models.entities import User
+from marvelous.models.user import get_ranking, User
 from typing import Iterable
 from marvelous.client.discord import message_gateway
 

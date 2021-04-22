@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from ...entities import User
+from .user import User
 from .reaction import Reaction
 
 
 @dataclass()
-class MarvelousSettings:
+class BooingSettings:
     daily_step_limit: int
     steps_per_bonus: int
     sender_bonus_point: int
@@ -12,33 +12,33 @@ class MarvelousSettings:
 
 
 @dataclass()
-class MarvelousResult:
-    sender_bonus_diff: int
+class BooingResult:
+    sender_penalty_diff: int
     sender_point_diff: int
     receiver_point_diff: int
 
 
-class MarvelousReaction(Reaction):
-    settings: MarvelousSettings
-    result: MarvelousResult
+class BooingReaction(Reaction):
+    settings: BooingSettings
+    result: BooingResult
 
-    def __init__(self, settings: MarvelousSettings):
+    def __init__(self, settings: BooingSettings):
         self.settings = settings
 
     def send(self, sender: User, receiver: User):
         sender_point_before = sender.point
         receiver_point_before = receiver.point
 
-        bonus = sender.marvelous_bonus.add_step(
+        penalty = sender.booing_penalty.add_step(
             step=1,
             today_limit=self.settings.daily_step_limit,
             step_interval=self.settings.steps_per_bonus
         )
-        sender.point += self.settings.sender_bonus_point * bonus
+        sender.point += self.settings.sender_bonus_point * penalty
         receiver.point += self.settings.receiver_point
 
-        self.result = MarvelousResult(
-            sender_bonus_diff=bonus,
+        self.result = BooingResult(
+            sender_penalty_diff=penalty,
             sender_point_diff=sender.point - sender_point_before,
             receiver_point_diff=receiver.point - receiver_point_before
         )
@@ -47,16 +47,16 @@ class MarvelousReaction(Reaction):
         sender_point_before = sender.point
         receiver_point_before = receiver.point
 
-        bonus = sender.marvelous_bonus.add_step(
+        penalty = sender.booing_penalty.add_step(
             step=-1,
             today_limit=self.settings.daily_step_limit,
             step_interval=self.settings.steps_per_bonus
         )
-        sender.point += self.settings.sender_bonus_point * bonus
         receiver.point -= self.settings.receiver_point
+        sender.point += self.settings.sender_bonus_point * penalty
 
-        self.result = MarvelousResult(
-            sender_bonus_diff=bonus,
+        self.result = BooingResult(
+            sender_penalty_diff=penalty,
             sender_point_diff=sender.point - sender_point_before,
             receiver_point_diff=receiver.point - receiver_point_before
         )

@@ -2,7 +2,7 @@ from logging import getLogger
 from discord.ext import commands
 import discord
 from ..presentation import check_survival_bonus, add_reaction, remove_reaction
-from . import fetch_reaction_event
+from .reaction import fetch_reaction_event
 
 
 logger = getLogger(__name__)

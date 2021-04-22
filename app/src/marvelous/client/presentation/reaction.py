@@ -1,6 +1,7 @@
 from logging import getLogger
-from marvelous.models.events import Reaction, SuperMarvelousReaction
-from marvelous.models.usecases import send_reaction, cancel_reaction, is_user_exist
+from marvelous.models.super_marvelous import SuperMarvelousReaction
+from marvelous.models.reaction import send_reaction, cancel_reaction, Reaction
+from marvelous.models.user import is_user_exist
 from marvelous.models.errors import ModelError
 from .user import register_user_implicit
 from . import response_super_marvelous

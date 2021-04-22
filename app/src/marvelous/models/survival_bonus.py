@@ -1,6 +1,5 @@
 import marvelous.data_store as data_store
-from ..entities import User
-from .user import get_user
+from .user import get_user, User
 
 
 def apply(user: User, give_point: int):

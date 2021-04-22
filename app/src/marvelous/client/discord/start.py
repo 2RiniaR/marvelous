@@ -2,7 +2,6 @@ from discord.ext import commands
 import discord
 from marvelous.client.discord.help import MarvelousHelpCommand
 from . import client
-import asyncio
 
 
 INITIAL_EXTENSIONS = [

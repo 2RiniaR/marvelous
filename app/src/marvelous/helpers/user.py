@@ -1,5 +1,4 @@
-from marvelous.models.entities import User
-from marvelous.models.parts import DailyBonus
+from marvelous.models.user import User, DailyBonus
 from marvelous.settings import app_settings
 import discord
 
