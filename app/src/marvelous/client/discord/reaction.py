@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import discord
 from . import client
 from marvelous.helpers import first_match
-from typing import Optional
+from typing import Optional, Dict
 
 
 @dataclass()
@@ -12,6 +12,28 @@ class ReactionEvent:
     channel: discord.TextChannel
     emoji: discord.PartialEmoji
     reaction: Optional[discord.Reaction]
+
+
+class ReactionStateCache:
+    states: Dict[int, bool]
+    max_cache_count: int = 32768
+
+    @staticmethod
+    def to_event_hash(user_id: int, message_id: int, reaction_type: int) -> int:
+        return user_id | (message_id << 32) | (reaction_type << 64)
+
+    def set_state(self, user_id: int, message_id: int, reaction_type: int, is_added: bool) -> None:
+        event_hash = self.to_event_hash(user_id, message_id, reaction_type)
+        if len(self.states) > self.max_cache_count:
+            return
+        self.states[event_hash] = is_added
+
+    def get_state(self, user_id: int, message_id: int, reaction_type: int) -> Optional[bool]:
+        event_hash = self.to_event_hash(user_id, message_id, reaction_type)
+        return self.states.get(event_hash)
+
+    def reset(self):
+        self.states.clear()
 
 
 def get_reaction_from_message(emoji: discord.PartialEmoji, message: discord.Message) -> Optional[discord.Reaction]:
