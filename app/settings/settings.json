@@ -10,7 +10,7 @@
     "reactions": ["👏"]
   },
   "booing": {
-    "receive_point": "1",
+    "receive_point": "-1",
     "send_penalty": {
       "step_interval": "5",
       "daily_step_limit": "10",

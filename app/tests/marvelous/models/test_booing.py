@@ -1,6 +1,6 @@
 import pytest
 import pytest_mock
-from src.marvelous.models.reaction.booing.booing import *
+from src.marvelous.models.booing import *
 from dataclasses import dataclass
 
 

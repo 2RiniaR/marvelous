@@ -1,4 +1,4 @@
-from marvelous.models.entities import User
+from marvelous.models.user import User
 import mysql.connector
 from .. import connection
 

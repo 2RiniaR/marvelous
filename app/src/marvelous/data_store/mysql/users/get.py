@@ -4,8 +4,8 @@ from .. import connection
 from logging import getLogger
 from typing import Iterable
 from typing import Tuple
-from marvelous.models.parts import DailyBonus
-from marvelous.models.entities import User
+from marvelous.models.daily_bonus import DailyBonus
+from marvelous.models.user import User
 
 
 logger = getLogger(__name__)

@@ -1,6 +1,8 @@
 import pytest
 import pytest_mock
-import marvelous.models.daily_bonus as target_package
+from unittest.mock import MagicMock
+import src.marvelous.models.daily_bonus as target_package
+from src.marvelous.models.daily_bonus import *
 from dataclasses import dataclass
 
 
@@ -83,3 +85,12 @@ def test_add_step(case: AddStepCase, mocker: pytest_mock.MockerFixture):
 
     assert case.before_self == case.expected_self
     assert return_value == case.expected_return_value
+
+
+def test_reset_survival_bonus_succeed(mocker: pytest_mock.MockerFixture):
+    """
+    データの更新に成功した場合、結果として成功を表すオブジェクトが返される
+    """
+    update_func: MagicMock = mocker.patch.object(data_store.users, "reset_daily_steps")
+    reset_daily_steps()
+    update_func.assert_called_once()

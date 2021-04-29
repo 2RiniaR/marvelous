@@ -10,7 +10,7 @@ logger = getLogger(__name__)
 
 
 async def wait_ready():
-    logger.info("Waiting connect to MySQL server.")
+    logger.debug("Waiting connect to MySQL server.")
     max_attempt = 30
     attempt = 0
     client = connection()
@@ -25,7 +25,7 @@ async def wait_ready():
         except mysql.connector.Error as err:
             pass
 
-        logger.info(f"Attempt {attempt}...")
+        logger.debug(f"Attempt {attempt}...")
         if attempt >= max_attempt:
             logger.error(f"Failed to connect to MySQL server.")
             return
@@ -71,7 +71,7 @@ class MySQLClient:
         self.close_connection()
 
     def open_connection(self):
-        logger.info(
+        logger.debug(
             f"Connecting to MySQL server...  (host: {self.host}, port: {self.port}, user: {self.user}, "
             f"password: *HIDDEN*, database: {self.database})",
         )
@@ -93,7 +93,7 @@ class MySQLClient:
         logger.info("Connected to MySQL server.")
 
     def close_connection(self):
-        logger.info("Closing MySQL server connection.")
+        logger.debug("Closing MySQL server connection.")
         self.connection.close()
         logger.info("Closed MySQL server connection.")
 

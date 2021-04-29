@@ -1,7 +1,8 @@
 import pytest_mock
 import pytest
 from unittest.mock import MagicMock
-import marvelous.models.survival_bonus as target_package
+import src.marvelous.models.survival_bonus as target_package
+from src.marvelous.models.survival_bonus import *
 from dataclasses import dataclass
 
 
@@ -64,3 +65,12 @@ def test_give_survival_bonus_true(mocker: pytest_mock.MockerFixture):
     apply_func.assert_called_once_with(user, give_point)
     update_func.assert_called_once_with(user)
     assert result
+
+
+def test_reset_survival_bonus_succeed(mocker: pytest_mock.MockerFixture):
+    """
+    データの更新に成功した場合、結果として成功を表すオブジェクトが返される
+    """
+    update_func: MagicMock = mocker.patch.object(data_store.users, "reset_survival_bonus")
+    reset_survival_bonus()
+    update_func.assert_called_once()

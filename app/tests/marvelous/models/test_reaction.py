@@ -1,12 +1,13 @@
 import pytest_mock
 import pytest
 from unittest.mock import MagicMock, call
-import marvelous.models.services.reaction as target_package
+import src.marvelous.models.reaction as target_package
+from src.marvelous.models.reaction import *
 
 
 def test_check_self_user_failed(mocker: pytest_mock.MockerFixture):
     sender_id: MagicMock = mocker.Mock()
-    with pytest.raises(SelfUserActionError) as e:
+    with pytest.raises(SelfUserReactionError) as e:
         check_self_user(sender_id, sender_id)
     assert e.value.user_id == sender_id
 

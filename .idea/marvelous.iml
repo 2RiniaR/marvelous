@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Pipenv (marvelous)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (app-OYVwNvzk)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

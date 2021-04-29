@@ -1,6 +1,5 @@
 import discord
-from marvelous.models.user import register_user, get_user, is_user_exist, User
-from marvelous.helpers import get_initial_user
+from marvelous.models.user import register_user, get_user, is_user_exist, User, DailyBonus
 from marvelous.models.errors import ModelError
 from marvelous.settings import app_settings
 from marvelous.client.discord import message_gateway
@@ -8,6 +7,18 @@ from logging import getLogger
 
 
 logger = getLogger(__name__)
+
+
+def get_initial_user(user: discord.User):
+    return User(
+        discord_id=user.id,
+        display_name=user.display_name,
+        marvelous_bonus=DailyBonus(step=0, today=0),
+        booing_penalty=DailyBonus(step=0, today=0),
+        super_marvelous_left=app_settings.super_marvelous.initial_left_count,
+        survival_bonus_given=False,
+        point=0,
+    )
 
 
 def get_status_message(user: User) -> str:
@@ -33,7 +44,7 @@ def get_status_message(user: User) -> str:
     ])
 
 
-async def show_status(user: discord.Member, channel: discord.TextChannel):
+async def show_status(user: discord.User, channel: discord.TextChannel):
     if not is_user_exist(user.id):
         await register_user_implicit(user)
 
@@ -47,7 +58,7 @@ async def show_status(user: discord.Member, channel: discord.TextChannel):
     await message_gateway.send(message, channel)
 
 
-async def register_user_implicit(author: discord.Member):
+async def register_user_implicit(author: discord.User):
     try:
         user: User = get_initial_user(author)
         register_user(user)
