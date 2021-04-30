@@ -7,4 +7,6 @@ def is_now_time(time: datetime.time):
 
 
 def is_now_weekday(num: int):
+    if num < 0 or 6 < num:
+        raise ValueError(f"num({num}) must be an integer in range 0 to 6.")
     return datetime.datetime.now().weekday() == num
