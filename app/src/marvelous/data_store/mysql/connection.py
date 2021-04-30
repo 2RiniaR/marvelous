@@ -23,6 +23,7 @@ async def wait_ready():
                 client.close_connection()
                 return
         except mysql.connector.Error as err:
+            logger.debug(str(err))
             pass
 
         logger.debug(f"Attempt {attempt}...")
@@ -31,17 +32,6 @@ async def wait_ready():
             return
 
         await asyncio.sleep(1)
-
-
-def connection():
-    return MySQLClient(
-        host=env.mysql_host,
-        port=env.mysql_port,
-        user=env.mysql_user,
-        password=env.mysql_password,
-        database=env.mysql_database,
-        pool_size=env.mysql_pool_size
-    )
 
 
 class MySQLClient:
@@ -79,6 +69,7 @@ class MySQLClient:
         try:
             self.connection = mysql.connector.connect(
                 host=self.host, port=self.port, user=self.user, password=self.password, database=self.database,
+                # 現在のデプロイ環境では、コネクションプールがサポートされていないため設定をオフにしている
                 # pool_size=self.pool_size, pool_name=self.pool_name, pool_reset_session=False
             )
         except mysql.connector.Error as err:
@@ -99,3 +90,14 @@ class MySQLClient:
 
     def is_connected(self):
         return self.connection is not None and self.connection.is_connected()
+
+
+def connection() -> MySQLClient:
+    return MySQLClient(
+        host=env.mysql_host,
+        port=env.mysql_port,
+        user=env.mysql_user,
+        password=env.mysql_password,
+        database=env.mysql_database,
+        pool_size=env.mysql_pool_size
+    )
