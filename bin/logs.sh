@@ -3,4 +3,4 @@
 cd `dirname $0`
 cd ..
 
-docker-compose logs
+docker-compose logs -tf
