@@ -24,9 +24,9 @@ def reset_daily_steps() -> None:
 
 def get_max_available_step(current: int, add: int, limit: int) -> int:
     if current < 0:
-        raise ValueError
+        raise ValueError(f"Current({current}) must be larger then 0.")
     if limit < 0:
-        raise ValueError
+        raise ValueError(f"Limit({limit}) must be larger then 0.")
 
     total = current + add
 
@@ -39,4 +39,4 @@ def get_max_available_step(current: int, add: int, limit: int) -> int:
     if total <= limit <= current:
         return total - limit
 
-    raise ArithmeticError
+    raise ArithmeticError("Unknown state.")

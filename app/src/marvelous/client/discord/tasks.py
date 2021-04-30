@@ -17,6 +17,6 @@ async def check_timer():
     check_reset_super_marvelous_left()
 
 
-def setup(bot: commands.Bot):
+def setup(_: commands.Bot):
     check_timer.start()
     every_second.start()

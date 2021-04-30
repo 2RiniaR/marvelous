@@ -8,7 +8,8 @@ class MarvelousHelpCommand(commands.HelpCommand):
         self.no_category = "その他"
         self.command_attrs["help"] = "コマンド一覧とヘルプを表示する"
 
-    def get_ending_note(self):
+    @staticmethod
+    def get_ending_note():
         return ""
 
     def command_not_found(self, string):

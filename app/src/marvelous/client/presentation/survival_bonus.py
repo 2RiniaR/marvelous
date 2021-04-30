@@ -13,21 +13,21 @@ from marvelous.helpers import is_now_time
 logger = getLogger(__name__)
 
 
-async def praise_survival(user: discord.Member, channel: discord.TextChannel):
+async def praise_survival(user: discord.User, channel: discord.TextChannel):
     message = get_message("praise_survival", user.name)
     await message_gateway.send(message, channel)
 
 
-def is_event_available(user: discord.Member) -> bool:
+def is_event_available(user: discord.User) -> bool:
     return not user.bot
 
 
-async def register_users_if_not_exist(user: discord.Member):
+async def register_users_if_not_exist(user: discord.User):
     if not is_user_exist(user.id):
         await register_user_implicit(user)
 
 
-async def check_survival_bonus(user: discord.Member, channel: discord.TextChannel):
+async def check_survival_bonus(user: discord.User, channel: discord.TextChannel):
     if not is_event_available(user):
         return
     await register_users_if_not_exist(user)

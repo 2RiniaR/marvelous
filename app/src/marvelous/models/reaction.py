@@ -1,6 +1,6 @@
 from .user import User, get_user
 import marvelous.data_store as data_store
-from .errors import SelfUserReactionError
+from .errors import SelfUserReactionError, DataFetchError, CalculateError, DataUpdateError, UserNotFoundError
 
 
 class Reaction:
@@ -18,16 +18,31 @@ def check_self_user(sender_id: int, receiver_id: int):
 
 def update_reaction(sender_id: int, receiver_id: int, reaction: Reaction, forward: bool):
     check_self_user(sender_id, receiver_id)
-    sender = get_user(sender_id)
-    receiver = get_user(receiver_id)
 
-    if forward:
-        reaction.send(sender, receiver)
-    else:
-        reaction.cancel(sender, receiver)
+    try:
+        sender = get_user(sender_id)
+        receiver = get_user(receiver_id)
+    except Exception as err:
+        raise DataFetchError from err
 
-    data_store.users.update_user(sender)
-    data_store.users.update_user(receiver)
+    if sender is None:
+        raise UserNotFoundError(sender_id)
+    if receiver is None:
+        raise UserNotFoundError(receiver_id)
+
+    try:
+        if forward:
+            reaction.send(sender, receiver)
+        else:
+            reaction.cancel(sender, receiver)
+    except Exception as err:
+        raise CalculateError from err
+
+    try:
+        data_store.users.update_user(sender)
+        data_store.users.update_user(receiver)
+    except Exception as err:
+        raise DataUpdateError from err
 
 
 def send_reaction(sender_id: int, receiver_id: int, reaction: Reaction):

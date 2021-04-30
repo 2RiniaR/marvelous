@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from .user import User
 from .reaction import Reaction
+from .errors import DataUpdateError
 import marvelous.data_store as data_store
 
 
@@ -54,10 +55,13 @@ class SuperMarvelousReaction(Reaction):
         )
 
 
-def reset_super_marvelous_left(count: int) -> None:
-    """「めっちゃえらい」の残り使用可能回数をリセットする"""
-    data_store.users.reset_super_marvelous_left(count)
-
-
 def left_count_is_enough(user: User) -> bool:
     return user.super_marvelous_left > 0
+
+
+def reset_super_marvelous_left(count: int) -> None:
+    """「めっちゃえらい」の残り使用可能回数をリセットする"""
+    try:
+        data_store.users.reset_super_marvelous_left(count)
+    except Exception as err:
+        raise DataUpdateError from err

@@ -1,13 +1,14 @@
 from .. import connection
 import mysql.connector
-from typing import Dict
 from logging import getLogger
 
 
 logger = getLogger(__name__)
 
 
-def commit(query: str, params: Dict[str, str] = {}):
+def commit(query: str, params=None):
+    if params is None:
+        params = {}
     with connection() as client:
         cursor = client.connection.cursor()
         try:
@@ -19,7 +20,9 @@ def commit(query: str, params: Dict[str, str] = {}):
             raise e
 
 
-def fetch_one(query: str, params: Dict[str, str] = {}):
+def fetch_one(query: str, params=None):
+    if params is None:
+        params = {}
     with connection() as client:
         cursor = client.connection.cursor()
         try:
@@ -32,7 +35,9 @@ def fetch_one(query: str, params: Dict[str, str] = {}):
     return data
 
 
-def fetch_all(query: str, params: Dict[str, str] = {}):
+def fetch_all(query: str, params=None):
+    if params is None:
+        params = {}
     with connection() as client:
         cursor = client.connection.cursor()
         try:

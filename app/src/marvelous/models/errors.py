@@ -2,7 +2,19 @@ class ModelError(Exception):
     pass
 
 
-class UserNotFoundError(Exception):
+class DataUpdateError(ModelError):
+    pass
+
+
+class DataFetchError(ModelError):
+    pass
+
+
+class CalculateError(ModelError):
+    pass
+
+
+class UserNotFoundError(ModelError):
     user_id: int
 
     def __init__(self, user_id: int):
@@ -12,7 +24,7 @@ class UserNotFoundError(Exception):
         return f"The user(id={self.user_id}) was not found."
 
 
-class SelfUserReactionError(Exception):
+class SelfUserReactionError(ModelError):
     user_id: int
 
     def __init__(self, user_id: int):
@@ -22,7 +34,7 @@ class SelfUserReactionError(Exception):
         return f"The user(id={self.user_id}) tried to reaction to self. Skipped to update."
 
 
-class AlreadyExistError(Exception):
+class AlreadyExistError(ModelError):
     user_id: int
 
     def __init__(self, user_id: int):
