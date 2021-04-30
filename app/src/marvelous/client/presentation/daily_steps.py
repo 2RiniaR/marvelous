@@ -12,7 +12,10 @@ def check_reset_daily_steps():
     reset_time = app_settings.marvelous.send_bonus.reset_time
     if not is_now_time(reset_time):
         return
+    run_reset_daily_steps()
 
+
+def run_reset_daily_steps():
     try:
         reset_daily_steps()
     except ModelError as err:

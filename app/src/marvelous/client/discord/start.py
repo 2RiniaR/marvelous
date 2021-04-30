@@ -2,6 +2,7 @@ from discord.ext import commands
 import discord
 from marvelous.client.discord.help import MarvelousHelpCommand
 from . import client
+from marvelous.settings import env
 
 
 INITIAL_EXTENSIONS = [
@@ -9,6 +10,9 @@ INITIAL_EXTENSIONS = [
     "marvelous.client.discord.events",
     "marvelous.client.discord.tasks"
 ]
+if env.run_environment == "development":
+    INITIAL_EXTENSIONS += ["marvelous.client.discord.debug"]
+
 COMMAND_PREFIX = "!erai "
 
 

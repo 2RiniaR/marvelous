@@ -57,7 +57,10 @@ def check_reset_survival_bonus():
     reset_time = app_settings.survival.reset_time
     if not is_now_time(reset_time):
         return
+    run_reset_survival_bonus()
 
+
+def run_reset_survival_bonus():
     try:
         reset_survival_bonus()
     except ModelError as err:

@@ -13,7 +13,10 @@ def check_reset_super_marvelous_left():
     reset_weekday = app_settings.super_marvelous.reset_weekday
     if not (is_now_time(reset_time) and is_now_weekday(reset_weekday)):
         return
+    run_reset_super_marvelous_left()
 
+
+def run_reset_super_marvelous_left():
     try:
         reset_super_marvelous_left(app_settings.super_marvelous.initial_left_count)
     except ModelError as err:
