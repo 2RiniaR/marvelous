@@ -9,7 +9,7 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-def get_initial_user(user: discord.User):
+def get_initial_user(user: discord.Member):
     return User(
         discord_id=user.id,
         display_name=user.display_name,
@@ -44,7 +44,7 @@ def get_status_message(user: User) -> str:
     ])
 
 
-async def show_status(user: discord.User, channel: discord.TextChannel):
+async def show_status(user: discord.Member, channel: discord.TextChannel):
     if not is_user_exist(user.id):
         await register_user_implicit(user)
 
@@ -58,7 +58,7 @@ async def show_status(user: discord.User, channel: discord.TextChannel):
     await message_gateway.send(message, channel)
 
 
-async def register_user_implicit(author: discord.User):
+async def register_user_implicit(author: discord.Member):
     try:
         user: User = get_initial_user(author)
         register_user(user)

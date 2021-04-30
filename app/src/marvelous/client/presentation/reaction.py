@@ -11,6 +11,7 @@ from marvelous.models.errors import ModelError
 from marvelous.models.super_marvelous import SuperMarvelousReaction, SuperMarvelousSettings
 from marvelous.models.marvelous import MarvelousReaction, MarvelousSettings
 from marvelous.models.booing import BooingReaction, BooingSettings
+from marvelous.settings.messages import get_message
 from ..discord import message_gateway
 
 
@@ -25,10 +26,10 @@ class ReactionType(IntEnum):
 
 @dataclass()
 class ReactionEvent:
-    sender: discord.User
-    receiver: discord.User
+    sender: discord.Member
+    receiver: discord.Member
     channel: discord.TextChannel
-    reaction_type: ReactionType
+    reaction: discord.Reaction
 
 
 def get_marvelous() -> MarvelousReaction:
@@ -66,6 +67,17 @@ def get_reaction(reaction_type: ReactionType) -> Optional[Reaction]:
     return None
 
 
+def get_reaction_type(emoji: discord.PartialEmoji) -> Optional[ReactionType]:
+    str_emoji = str(emoji)
+    if str_emoji == app_settings.marvelous.reaction:
+        return ReactionType.Marvelous
+    elif str_emoji == app_settings.super_marvelous.reaction:
+        return ReactionType.SuperMarvelous
+    elif str_emoji == app_settings.booing.reaction:
+        return ReactionType.Booing
+    return None
+
+
 def is_event_available(event: ReactionEvent) -> bool:
     return (
             event.sender.id != event.receiver.id and
@@ -81,21 +93,38 @@ async def register_users_if_not_exist(event: ReactionEvent):
         await register_user_implicit(event.receiver)
 
 
+async def response_marvelous(event: ReactionEvent):
+    if app_settings.marvelous.random_message_count == event.reaction.count:
+        message = get_message("praise_something", event.receiver.display_name)
+        await message_gateway.send(message, event.channel)
+
+
+async def response_booing(event: ReactionEvent):
+    if app_settings.marvelous.random_message_count == event.reaction.count:
+        message = get_message("comfort", event.receiver.display_name)
+        await message_gateway.send(message, event.channel)
+
+
 async def response_super_marvelous(event: ReactionEvent, reaction: SuperMarvelousReaction):
     if reaction.result.no_left_count:
-        message = f":no_entry: {event.sender.name}    <<<    「めっちゃえらい！」の残り使用回数が0です"
+        message = f":no_entry: {event.sender.display_name}    <<<    「めっちゃえらい！」の残り使用回数が0です"
     else:
         message = (
             f"{event.sender.display_name}    >>>    "
-            f"{':raised_hands:    ' * 3}"
-            f"**{str(event.receiver.name)}**"
-            f"{'    :raised_hands:' * 3}"
+            f"{':raised_hands: ' * 3}"
+            f"**{str(event.receiver.display_name)}**"
+            f"{' :raised_hands:' * 3}"
+            f"\n{get_message('praise_something', event.receiver.display_name)}"
         )
     await message_gateway.send(message, event.channel)
 
 
 async def response(event: ReactionEvent, send: bool, reaction: Reaction):
-    if send and isinstance(reaction, SuperMarvelousReaction):
+    if send and isinstance(reaction, MarvelousReaction):
+        await response_marvelous(event)
+    elif send and isinstance(reaction, BooingReaction):
+        await response_booing(event)
+    elif send and isinstance(reaction, SuperMarvelousReaction):
         await response_super_marvelous(event, reaction)
 
 
@@ -104,7 +133,8 @@ async def run_reaction_event(event: ReactionEvent, send: bool):
         return
     await register_users_if_not_exist(event)
 
-    reaction = get_reaction(event.reaction_type)
+    reaction_type = get_reaction_type(event.reaction.emoji)
+    reaction = get_reaction(reaction_type)
     if reaction is None:
         return
 

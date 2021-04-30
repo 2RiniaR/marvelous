@@ -15,6 +15,7 @@ class MarvelousSettings:
     receive_point: int
     send_bonus: BonusSettings
     reaction: str
+    random_message_count: int
 
 
 @dataclass()
@@ -22,6 +23,7 @@ class BooingSettings:
     receive_point: int
     send_penalty: BonusSettings
     reaction: str
+    random_message_count: int
 
 
 @dataclass()
@@ -45,12 +47,18 @@ class MessageSettings:
     strict_time: float
 
 
+@dataclass()
+class UserSettings:
+    update_name_time: datetime.time
+
+
 class AppSettings:
     marvelous: MarvelousSettings
     super_marvelous: SuperMarvelousSettings
     booing: BooingSettings
     survival: SurvivalSettings
     message: MessageSettings
+    user: UserSettings
 
     def __init__(self):
         self.marvelous = MarvelousSettings(
@@ -61,7 +69,8 @@ class AppSettings:
                 point=1,
                 reset_time=datetime.time(4, 0)
             ),
-            reaction="👏"
+            reaction="👏",
+            random_message_count=3
         )
 
         self.booing = BooingSettings(
@@ -72,7 +81,8 @@ class AppSettings:
                 point=-1,
                 reset_time=datetime.time(4, 0)
             ),
-            reaction="🖕"
+            reaction="🖕",
+            random_message_count=3
         )
 
         self.super_marvelous = SuperMarvelousSettings(
@@ -91,6 +101,10 @@ class AppSettings:
 
         self.message = MessageSettings(
             strict_time=1.0
+        )
+
+        self.user = UserSettings(
+            update_name_time=datetime.time(4, 0)
         )
 
 

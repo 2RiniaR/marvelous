@@ -3,6 +3,7 @@ from discord.ext import commands
 import discord
 from ..presentation import check_survival_bonus
 from .reaction import set_reaction_state
+from .help import show_help_on_mention
 
 
 logger = getLogger(__name__)
@@ -15,6 +16,7 @@ async def on_ready():
 
 @commands.Cog.listener()
 async def on_message(message: discord.Message):
+    await show_help_on_mention(message)
     await check_survival_bonus(message.author, message.channel)
 
 
