@@ -56,11 +56,11 @@ def get_booing() -> BooingReaction:
 
 
 def get_reaction(reaction_type: ReactionType) -> Reaction:
-    if reaction_type is ReactionType.Marvelous:
+    if reaction_type == ReactionType.Marvelous:
         return get_marvelous()
-    elif reaction_type is ReactionType.SuperMarvelous:
+    elif reaction_type == ReactionType.SuperMarvelous:
         return get_super_marvelous()
-    elif reaction_type is ReactionType.Booing:
+    elif reaction_type == ReactionType.Booing:
         return get_booing()
 
 

@@ -72,14 +72,15 @@ class ReactionStateCache:
 reaction_cache = ReactionStateCache()
 
 
-def get_reaction_type(emoji: discord.PartialEmoji) -> ReactionType:
+def get_reaction_type(emoji: discord.PartialEmoji) -> Optional[ReactionType]:
     str_emoji = str(emoji)
-    if str_emoji in app_settings.marvelous.reactions:
+    if str_emoji == app_settings.marvelous.reactions:
         return ReactionType.Marvelous
-    elif str_emoji in app_settings.super_marvelous.reactions:
+    elif str_emoji == app_settings.super_marvelous.reactions:
         return ReactionType.SuperMarvelous
-    elif str_emoji in app_settings.booing.reactions:
+    elif str_emoji == app_settings.booing.reactions:
         return ReactionType.Booing
+    return None
 
 
 def get_reaction_from_message(emoji: discord.PartialEmoji, message: discord.Message) -> Optional[discord.Reaction]:
@@ -126,12 +127,17 @@ async def reflect_caches():
 
 
 def set_reaction_state(payload: discord.RawReactionActionEvent, is_added: bool):
+    reaction_type = get_reaction_type(payload.emoji)
+    if reaction_type is None:
+        return
+
     reaction_context = ReactionContext(
         user_id=payload.user_id,
         channel_id=payload.channel_id,
         message_id=payload.message_id,
-        reaction_type=get_reaction_type(payload.emoji)
+        reaction_type=reaction_type
     )
+
     if not reaction_cache.is_state_registered(reaction_context):
         reaction_cache.register_state(reaction_context, not is_added)
     reaction_cache.set_state(reaction_context, is_added)

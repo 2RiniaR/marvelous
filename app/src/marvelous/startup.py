@@ -1,6 +1,5 @@
-from marvelous.settings.env import discord_token, app_settings_file_path
+from marvelous.settings.env import discord_token
 from marvelous.data_store.mysql.connection import wait_ready
-from marvelous.settings import app_settings
 from marvelous.client import start
 import logging
 import asyncio
@@ -17,7 +16,6 @@ async def startup_async():
         "===============================\n"
     ))
     logging.basicConfig(level=logging.INFO)
-    app_settings.load_from_file(app_settings_file_path)
     await wait_db_ready()
     await start(discord_token)
 
