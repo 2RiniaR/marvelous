@@ -2,6 +2,11 @@ import discord
 from marvelous.models.user import get_ranking, User
 from typing import Iterable
 from marvelous.client.discord import message_gateway
+from logging import getLogger
+from marvelous.models.errors import ModelError
+
+
+logger = getLogger(__name__)
 
 
 def get_ranking_message(users: Iterable[User]) -> str:
@@ -17,6 +22,11 @@ def get_ranking_message(users: Iterable[User]) -> str:
 
 
 async def show_ranking(channel: discord.TextChannel):
-    users = get_ranking()
+    try:
+        users = get_ranking()
+    except ModelError as err:
+        logger.error(str(err))
+        return
+
     message = get_ranking_message(users)
     await message_gateway.send(message, channel)

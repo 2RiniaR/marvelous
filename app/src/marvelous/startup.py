@@ -15,7 +15,7 @@ async def startup_async():
         "||    Marvelous started!!    ||\n"
         "===============================\n"
     ))
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.WARNING)
     await wait_db_ready()
     await start(discord_token)
 

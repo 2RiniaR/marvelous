@@ -51,7 +51,7 @@ async def show_status(user: discord.User, channel: discord.TextChannel):
     try:
         result_user = get_user(user.id)
     except ModelError as e:
-        logger.warning(str(e))
+        logger.error(str(e))
         return
 
     message = get_status_message(result_user)
@@ -63,4 +63,4 @@ async def register_user_implicit(author: discord.User):
         user: User = get_initial_user(author)
         register_user(user)
     except ModelError as err:
-        logger.warning(str(err))
+        logger.error(str(err))

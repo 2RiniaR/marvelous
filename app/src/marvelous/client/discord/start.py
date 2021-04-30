@@ -30,4 +30,3 @@ async def start(token: str):
     for extension in INITIAL_EXTENSIONS:
         client.bot.load_extension(extension)
     await runner(token)
-    # client.bot.run(token)

@@ -3,6 +3,7 @@ from logging import getLogger
 from .user import register_user_implicit
 from enum import IntEnum
 from dataclasses import dataclass
+from typing import Optional
 from marvelous.settings import app_settings
 from marvelous.models.reaction import send_reaction, cancel_reaction, Reaction
 from marvelous.models.user import is_user_exist
@@ -55,13 +56,14 @@ def get_booing() -> BooingReaction:
     ))
 
 
-def get_reaction(reaction_type: ReactionType) -> Reaction:
+def get_reaction(reaction_type: ReactionType) -> Optional[Reaction]:
     if reaction_type == ReactionType.Marvelous:
         return get_marvelous()
     elif reaction_type == ReactionType.SuperMarvelous:
         return get_super_marvelous()
     elif reaction_type == ReactionType.Booing:
         return get_booing()
+    return None
 
 
 def is_event_available(event: ReactionEvent) -> bool:
@@ -103,13 +105,16 @@ async def run_reaction_event(event: ReactionEvent, send: bool):
     await register_users_if_not_exist(event)
 
     reaction = get_reaction(event.reaction_type)
+    if reaction is None:
+        return
+
     try:
         if send:
             send_reaction(event.sender.id, event.receiver.id, reaction)
         else:
             cancel_reaction(event.sender.id, event.receiver.id, reaction)
     except ModelError as err:
-        logger.warning(str(err))
+        logger.error(str(err))
         return
 
     await response(event, send, reaction)

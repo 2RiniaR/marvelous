@@ -1,11 +1,14 @@
 import discord
 from . import client
 from marvelous.helpers import first_match
-from typing import Optional, Dict
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Optional, Dict
 from ..presentation.reaction import ReactionType, ReactionEvent, add_reaction, remove_reaction
 from marvelous.settings import app_settings
+from logging import getLogger
+
+
+logger = getLogger(__name__)
 
 
 @dataclass()
@@ -74,11 +77,11 @@ reaction_cache = ReactionStateCache()
 
 def get_reaction_type(emoji: discord.PartialEmoji) -> Optional[ReactionType]:
     str_emoji = str(emoji)
-    if str_emoji == app_settings.marvelous.reactions:
+    if str_emoji == app_settings.marvelous.reaction:
         return ReactionType.Marvelous
-    elif str_emoji == app_settings.super_marvelous.reactions:
+    elif str_emoji == app_settings.super_marvelous.reaction:
         return ReactionType.SuperMarvelous
-    elif str_emoji == app_settings.booing.reactions:
+    elif str_emoji == app_settings.booing.reaction:
         return ReactionType.Booing
     return None
 
@@ -88,10 +91,18 @@ def get_reaction_from_message(emoji: discord.PartialEmoji, message: discord.Mess
     return first_match(message.reactions, pred=lambda r: str(r.emoji) == str(emoji), default=None)
 
 
-async def fetch_reaction_event(ctx: ReactionContext) -> ReactionEvent:
+async def fetch_reaction_event(ctx: ReactionContext) -> Optional[ReactionEvent]:
     sender: discord.User = client.bot.get_user(ctx.user_id)
     channel: discord.TextChannel = client.bot.get_channel(ctx.channel_id)
-    message: discord.Message = await channel.fetch_message(ctx.message_id)
+    if sender is None or channel is None:
+        return None
+
+    try:
+        message: discord.Message = await channel.fetch_message(ctx.message_id)
+    except discord.DiscordException as err:
+        logger.warning(str(err))
+        return None
+
     return ReactionEvent(
         sender=sender,
         channel=channel,
@@ -101,18 +112,13 @@ async def fetch_reaction_event(ctx: ReactionContext) -> ReactionEvent:
 
 
 async def reflect_state(state: ReactionState):
-    print("\n".join([
-        "[Reflect reaction state]",
-        f"user_id: {state.context.user_id}",
-        f"channel_id: {state.context.channel_id}",
-        f"message_id: {state.context.message_id}",
-        f"type: {state.context.reaction_type}",
-        f"initial: {state.initial_state}",
-        f"current: {state.current_state}"
-    ]))
     if state.initial_state == state.current_state:
         return
+
     event = await fetch_reaction_event(state.context)
+    if event is None:
+        return
+
     if state.current_state:
         await add_reaction(event)
     else:

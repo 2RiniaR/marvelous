@@ -23,8 +23,14 @@ def is_event_available(user: discord.User) -> bool:
 
 
 async def register_users_if_not_exist(user: discord.User):
-    if not is_user_exist(user.id):
+    if is_user_exist(user.id):
+        return
+
+    try:
         await register_user_implicit(user)
+    except ModelError as err:
+        logger.error(str(err))
+        return
 
 
 async def check_survival_bonus(user: discord.User, channel: discord.TextChannel):
@@ -35,7 +41,7 @@ async def check_survival_bonus(user: discord.User, channel: discord.TextChannel)
     try:
         bonus_given = give_survival_bonus(user.id, app_settings.survival.point)
     except ModelError as err:
-        logger.warning(str(err))
+        logger.error(str(err))
         return
 
     if bonus_given:
@@ -44,5 +50,11 @@ async def check_survival_bonus(user: discord.User, channel: discord.TextChannel)
 
 def check_reset_survival_bonus():
     reset_time = app_settings.survival.reset_time
-    if is_now_time(reset_time):
+    if not is_now_time(reset_time):
+        return
+
+    try:
         reset_survival_bonus()
+    except ModelError as err:
+        logger.error(str(err))
+        return

@@ -1,6 +1,10 @@
 import asyncio
 import discord
 from marvelous.settings import app_settings
+from logging import getLogger
+
+
+logger = getLogger(__name__)
 
 
 class DiscordMessageGateway:
@@ -10,10 +14,6 @@ class DiscordMessageGateway:
         self.loop = asyncio.get_event_loop()
         self.strict = False
 
-    @staticmethod
-    async def send_force(text: str, channel: discord.TextChannel):
-        await channel.send(text)
-
     async def send(self, text: str, channel: discord.TextChannel):
         asyncio.ensure_future(self.__send_with_strict_lock(text, channel), loop=self.loop)
 
@@ -21,9 +21,14 @@ class DiscordMessageGateway:
         if self.strict:
             return
         self.strict = True
-        await channel.send(text)
-        await asyncio.sleep(app_settings.message.strict_time)
-        self.strict = False
+
+        try:
+            await channel.send(text)
+            await asyncio.sleep(app_settings.message.strict_time)
+        except Exception as err:
+            logger.error(str(err))
+        finally:
+            self.strict = False
 
 
 message_gateway = DiscordMessageGateway()

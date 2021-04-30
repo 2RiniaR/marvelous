@@ -1,15 +1,14 @@
 from discord.ext import commands
 
 
-class MarvelousHelpCommand(commands.HelpCommand):
+class MarvelousHelpCommand(commands.DefaultHelpCommand):
     def __init__(self):
         super().__init__()
         self.commands_heading = "コマンド:"
         self.no_category = "その他"
         self.command_attrs["help"] = "コマンド一覧とヘルプを表示する"
 
-    @staticmethod
-    def get_ending_note():
+    def get_ending_note(self):
         return ""
 
     def command_not_found(self, string):
