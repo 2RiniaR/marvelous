@@ -10,7 +10,7 @@ logger = getLogger(__name__)
 
 
 async def wait_ready():
-    logger.info("Waiting connect to MySQL server.")
+    logger.debug("Waiting connect to MySQL server.")
     max_attempt = 30
     attempt = 0
     client = connection()
@@ -23,25 +23,15 @@ async def wait_ready():
                 client.close_connection()
                 return
         except mysql.connector.Error as err:
+            logger.debug(str(err))
             pass
 
-        logger.info(f"Attempt {attempt}...")
+        logger.debug(f"Attempt {attempt}...")
         if attempt >= max_attempt:
             logger.error(f"Failed to connect to MySQL server.")
             return
 
         await asyncio.sleep(1)
-
-
-def connection():
-    return MySQLClient(
-        host=env.mysql_host,
-        port=env.mysql_port,
-        user=env.mysql_user,
-        password=env.mysql_password,
-        database=env.mysql_database,
-        pool_size=env.mysql_pool_size
-    )
 
 
 class MySQLClient:
@@ -71,7 +61,7 @@ class MySQLClient:
         self.close_connection()
 
     def open_connection(self):
-        logger.info(
+        logger.debug(
             f"Connecting to MySQL server...  (host: {self.host}, port: {self.port}, user: {self.user}, "
             f"password: *HIDDEN*, database: {self.database})",
         )
@@ -79,7 +69,8 @@ class MySQLClient:
         try:
             self.connection = mysql.connector.connect(
                 host=self.host, port=self.port, user=self.user, password=self.password, database=self.database,
-                pool_size=self.pool_size, pool_name=self.pool_name, pool_reset_session=False
+                # 現在のデプロイ環境では、コネクションプールがサポートされていないため設定をオフにしている
+                # pool_size=self.pool_size, pool_name=self.pool_name, pool_reset_session=False
             )
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -93,9 +84,20 @@ class MySQLClient:
         logger.info("Connected to MySQL server.")
 
     def close_connection(self):
-        logger.info("Closing MySQL server connection.")
+        logger.debug("Closing MySQL server connection.")
         self.connection.close()
         logger.info("Closed MySQL server connection.")
 
     def is_connected(self):
         return self.connection is not None and self.connection.is_connected()
+
+
+def connection() -> MySQLClient:
+    return MySQLClient(
+        host=env.mysql_host,
+        port=env.mysql_port,
+        user=env.mysql_user,
+        password=env.mysql_password,
+        database=env.mysql_database,
+        pool_size=env.mysql_pool_size
+    )

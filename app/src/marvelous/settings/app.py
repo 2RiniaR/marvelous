@@ -1,7 +1,5 @@
-from typing import Iterable, Dict
 from dataclasses import dataclass
 import datetime
-import json
 
 
 @dataclass()
@@ -16,14 +14,16 @@ class BonusSettings:
 class MarvelousSettings:
     receive_point: int
     send_bonus: BonusSettings
-    reactions: Iterable[str]
+    reaction: str
+    random_message_count: int
 
 
 @dataclass()
 class BooingSettings:
     receive_point: int
     send_penalty: BonusSettings
-    reactions: Iterable[str]
+    reaction: str
+    random_message_count: int
 
 
 @dataclass()
@@ -31,7 +31,7 @@ class SuperMarvelousSettings:
     receive_point: int
     send_point: int
     initial_left_count: int
-    reactions: Iterable[str]
+    reaction: str
     reset_time: datetime.time
     reset_weekday: int
 
@@ -47,55 +47,64 @@ class MessageSettings:
     strict_time: float
 
 
+@dataclass()
+class UserSettings:
+    update_name_time: datetime.time
+
+
 class AppSettings:
     marvelous: MarvelousSettings
     super_marvelous: SuperMarvelousSettings
     booing: BooingSettings
     survival: SurvivalSettings
     message: MessageSettings
+    user: UserSettings
 
-    def load_from_file(self, path: str) -> None:
-        with open(path, "r") as f:
-            settings = json.load(f)
-
+    def __init__(self):
         self.marvelous = MarvelousSettings(
-            receive_point=int(settings["marvelous"]["receive_point"]),
+            receive_point=1,
             send_bonus=BonusSettings(
-                step_interval=int(settings["marvelous"]["send_bonus"]["step_interval"]),
-                daily_step_limit=int(settings["marvelous"]["send_bonus"]["daily_step_limit"]),
-                point=int(settings["marvelous"]["send_bonus"]["point"]),
-                reset_time=datetime.datetime.strptime(settings["marvelous"]["send_bonus"]["reset_time"], "%H:%M").time()
+                step_interval=5,
+                daily_step_limit=10,
+                point=1,
+                reset_time=datetime.time(4, 0)
             ),
-            reactions=settings["marvelous"]["reactions"]
+            reaction="👏",
+            random_message_count=3
         )
 
         self.booing = BooingSettings(
-            receive_point=int(settings["booing"]["receive_point"]),
+            receive_point=-1,
             send_penalty=BonusSettings(
-                step_interval=int(settings["booing"]["send_penalty"]["step_interval"]),
-                daily_step_limit=int(settings["booing"]["send_penalty"]["daily_step_limit"]),
-                point=int(settings["booing"]["send_penalty"]["point"]),
-                reset_time=datetime.datetime.strptime(settings["booing"]["send_penalty"]["reset_time"], "%H:%M").time()
+                step_interval=5,
+                daily_step_limit=10,
+                point=-1,
+                reset_time=datetime.time(4, 0)
             ),
-            reactions=settings["booing"]["reactions"]
+            reaction="🖕",
+            random_message_count=3
         )
 
         self.super_marvelous = SuperMarvelousSettings(
-            receive_point=int(settings["super_marvelous"]["receive_point"]),
-            send_point=int(settings["super_marvelous"]["send_point"]),
-            reactions=settings["super_marvelous"]["reactions"],
-            initial_left_count=int(settings["super_marvelous"]["initial_left_count"]),
-            reset_time=datetime.datetime.strptime(settings["super_marvelous"]["reset_time"], "%H:%M").time(),
-            reset_weekday=int(settings["super_marvelous"]["reset_weekday"])
+            receive_point=10,
+            send_point=1,
+            reaction="🙌",
+            initial_left_count=3,
+            reset_time=datetime.time(4, 0),
+            reset_weekday=0
         )
 
         self.survival = SurvivalSettings(
-            point=int(settings["survival"]["point"]),
-            reset_time=datetime.datetime.strptime(settings["survival"]["reset_time"], "%H:%M").time()
+            point=1,
+            reset_time=datetime.time(4, 0)
         )
 
         self.message = MessageSettings(
-            strict_time=float(settings["message"]["strict_time"])
+            strict_time=1.0
+        )
+
+        self.user = UserSettings(
+            update_name_time=datetime.time(4, 0)
         )
 
 

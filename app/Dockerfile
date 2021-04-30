@@ -1,7 +1,7 @@
 # Build
 FROM python:3.8 as builder
 WORKDIR /app
-COPY ./Pipfile ./Pipfile.lock /app/
+COPY Pipfile ./Pipfile.lock /app/
 RUN pip install pipenv && \
     pipenv install --system
 
