@@ -86,7 +86,7 @@ class AppSettings:
         )
 
         self.super_marvelous = SuperMarvelousSettings(
-            receive_point=10,
+            receive_point=3,
             send_point=1,
             reaction="🙌",
             initial_left_count=3,
