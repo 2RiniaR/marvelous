@@ -1,9 +1,10 @@
 import discord
-from marvelous.models.user import register_user, get_user, is_user_exist, User, DailyBonus
+from marvelous.models.user import register_user, get_user, is_user_exist, User, DailyBonus, reset_marvelous_point
 from marvelous.models.errors import ModelError
 from marvelous.settings import app_settings
 from marvelous.client.discord import message_gateway
 from logging import getLogger
+from marvelous.helpers import is_now_time, is_now_weekday
 
 
 logger = getLogger(__name__)
@@ -64,3 +65,19 @@ async def register_user_implicit(author: discord.Member):
         register_user(user)
     except ModelError as err:
         logger.error(str(err))
+
+
+def check_reset_marvelous_point():
+    reset_time = app_settings.user.reset_marvelous_point_time
+    reset_weekday = app_settings.user.reset_marvelous_point_weekday
+    if not (is_now_time(reset_time) and is_now_weekday(reset_weekday)):
+        return
+    run_reset_marvelous_point()
+
+
+def run_reset_marvelous_point():
+    try:
+        reset_marvelous_point()
+    except ModelError as err:
+        logger.error(str(err))
+        return

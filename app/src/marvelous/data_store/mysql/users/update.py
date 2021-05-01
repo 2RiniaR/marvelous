@@ -34,3 +34,8 @@ def reset_super_marvelous_left(value: int) -> None:
 def reset_daily_steps() -> None:
     query = "UPDATE users SET marvelous_bonus_today_step = 0, booing_penalty_today_step = 0"
     commit(query)
+
+
+def reset_marvelous_point() -> None:
+    query = "UPDATE users SET marvelous_point = 0"
+    commit(query)
