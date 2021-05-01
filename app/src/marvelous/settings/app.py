@@ -81,7 +81,7 @@ class AppSettings:
                 point=-1,
                 reset_time=datetime.time(4, 0)
             ),
-            reaction="🖕",
+            reaction="💩",
             random_message_count=3
         )
 
