@@ -50,10 +50,19 @@ def get_help_embed() -> discord.Embed:
 async def show_help_on_mention(message: discord.Message):
     if client.bot.user not in message.mentions:
         return
-    channel: discord.TextChannel = message.channel
-    if not isinstance(channel, discord.TextChannel):
+    await show_help(message)
+
+
+async def show_help(message: discord.Message):
+    author: discord.User = message.author
+    if author is None:
         return
     try:
+        await author.send(embed=get_help_embed())
+    except discord.Forbidden:
+        channel: discord.TextChannel = message.channel
+        if channel is None or not isinstance(channel, discord.TextChannel):
+            return
         await channel.send(embed=get_help_embed())
     except Exception as err:
         logger.error(str(err))
@@ -65,15 +74,16 @@ class MarvelousHelpCommand(commands.DefaultHelpCommand):
         self.commands_heading = "コマンド:"
         self.no_category = ""
         self.command_attrs["help"] = "コマンド一覧とヘルプを表示する"
+        self.dm_help = True
 
     def get_ending_note(self):
         return ""
 
     async def send_bot_help(self, mapping):
-        try:
-            await self.get_destination().send(embed=get_help_embed())
-        except Exception as err:
-            logger.error(str(err))
+        ctx: commands.Context = self.context
+        if ctx is None:
+            return
+        await show_help(ctx.message)
 
     def command_not_found(self, string):
         return f"{string} というコマンドは存在しません。"
