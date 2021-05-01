@@ -30,14 +30,14 @@ def get_status_message(user: User) -> str:
         "```",
         f"【{user.display_name}】",
         "累計 👏" + str(user.point),
-        "使用可能 🙌" + str(max(0, user.super_marvelous_left)),
+        f"使用可能 {app_settings.super_marvelous.reaction}" + str(max(0, user.super_marvelous_left)),
         "",
         (
-            f":   👏ボーナスまであと 👏{marvelous_bonus_left}  "
+            f":   {app_settings.marvelous.reaction}ボーナスまであと {app_settings.marvelous.reaction}{marvelous_bonus_left}  "
             f"（本日分カウント {today_marvelous_count}/{app_settings.marvelous.send_bonus.daily_step_limit}）"
         ),
         (
-            f":   🖕ペナルティまであと 🖕{booing_penalty_left}  "
+            f":   {app_settings.booing.reaction}ペナルティまであと {app_settings.booing.reaction}{booing_penalty_left}  "
             f"（本日分カウント {today_booing_count}/{app_settings.booing.send_penalty.daily_step_limit}）"
         ),
         "```"
