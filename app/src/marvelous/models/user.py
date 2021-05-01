@@ -59,3 +59,11 @@ def get_ranking() -> Iterable[User]:
     except Exception as err:
         raise DataFetchError from err
     return users
+
+
+def reset_marvelous_point() -> None:
+    """えらいポイントをリセットする"""
+    try:
+        data_store.users.reset_marvelous_point()
+    except Exception as err:
+        raise DataUpdateError from err
