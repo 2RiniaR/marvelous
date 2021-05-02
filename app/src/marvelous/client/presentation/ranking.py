@@ -29,4 +29,4 @@ async def show_ranking(channel: discord.TextChannel):
         return
 
     message = get_ranking_message(users)
-    await message_gateway.send(message, channel)
+    await message_gateway.send(channel, content=message)

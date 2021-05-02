@@ -1,10 +1,13 @@
 import discord
-from marvelous.models.user import register_user, get_user, is_user_exist, User, DailyBonus, reset_marvelous_point
+from marvelous.models.user import (
+    register_user, get_user, is_user_exist, User, DailyBonus, reset_marvelous_point, get_ranking
+)
 from marvelous.models.errors import ModelError
 from marvelous.settings import app_settings
 from marvelous.client.discord import message_gateway
 from logging import getLogger
 from marvelous.helpers import is_now_time, is_now_weekday
+from typing import List
 
 
 logger = getLogger(__name__)
@@ -56,7 +59,7 @@ async def show_status(user: discord.Member, channel: discord.TextChannel):
         return
 
     message = get_status_message(result_user)
-    await message_gateway.send(message, channel)
+    await message_gateway.send(channel, content=message)
 
 
 async def register_user_implicit(author: discord.Member):
@@ -67,15 +70,50 @@ async def register_user_implicit(author: discord.Member):
         logger.error(str(err))
 
 
-def check_reset_marvelous_point():
+async def check_reset_marvelous_point():
     reset_time = app_settings.user.reset_marvelous_point_time
     reset_weekday = app_settings.user.reset_marvelous_point_weekday
     if not (is_now_time(reset_time) and is_now_weekday(reset_weekday)):
         return
-    run_reset_marvelous_point()
+    await run_reset_marvelous_point()
 
 
-def run_reset_marvelous_point():
+def get_weekly_message(ranking: List[User]) -> str:
+    def get_user_column(index: int, user: User) -> str:
+        return f"#{str(index + 1).zfill(2)} - {f'👏{user.point}'.rjust(4)}  {user.display_name}"
+
+    if len(ranking) == 0:
+        return ""
+
+    ranking_text = "\n".join(map(lambda x: get_user_column(x[0], x[1]), enumerate(ranking[:5])))
+
+    return (
+        f"👑今週、一番えらかったのは...  **{str(ranking[0].display_name)}**\n"
+        "\n"
+        "```\n"
+        "【ランキング上位】\n"
+        f"{ranking_text}"
+        "```\n"
+        "今週もよく頑張ったね。みんなえらい！\n"
+        "\n"
+        f"「{app_settings.super_marvelous.reaction} めっちゃえらい！」の使用回数をリセットしました。\n"
+        f"えらいポイントをリセットしました。今週も頑張ろう！"
+    )
+
+
+async def send_weekly_message():
+    try:
+        users = get_ranking()
+    except ModelError as err:
+        logger.error(str(err))
+        return
+    message = get_weekly_message(list(users))
+    embed = discord.Embed(title="今週のえらい", description=message, color=0xe8b77b)
+    await message_gateway.send_to_default_channel(embed=embed)
+
+
+async def run_reset_marvelous_point():
+    await send_weekly_message()
     try:
         reset_marvelous_point()
     except ModelError as err:

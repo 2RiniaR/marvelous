@@ -21,7 +21,7 @@ async def reset_daily_steps(ctx: commands.Context):
 
 @commands.command()
 async def reset_marvelous_point(ctx: commands.Context):
-    run_reset_marvelous_point()
+    await run_reset_marvelous_point()
 
 
 def setup(bot: commands.Bot):

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import datetime
+from typing import Optional
 
 
 @dataclass()
@@ -54,6 +55,7 @@ class UserSettings:
     reset_marvelous_point_weekday: int
 
 
+@dataclass()
 class AppSettings:
     marvelous: MarvelousSettings
     super_marvelous: SuperMarvelousSettings
@@ -62,54 +64,48 @@ class AppSettings:
     message: MessageSettings
     user: UserSettings
 
-    def __init__(self):
-        self.marvelous = MarvelousSettings(
-            receive_point=1,
-            send_bonus=BonusSettings(
-                step_interval=5,
-                daily_step_limit=10,
-                point=1,
-                reset_time=datetime.time(4, 0)
-            ),
-            reaction="👏",
-            random_message_count=3
-        )
 
-        self.booing = BooingSettings(
-            receive_point=-1,
-            send_penalty=BonusSettings(
-                step_interval=5,
-                daily_step_limit=10,
-                point=-1,
-                reset_time=datetime.time(4, 0)
-            ),
-            reaction="💩",
-            random_message_count=3
-        )
-
-        self.super_marvelous = SuperMarvelousSettings(
-            receive_point=3,
-            send_point=1,
-            reaction="🙌",
-            initial_left_count=3,
-            reset_time=datetime.time(4, 0),
-            reset_weekday=0
-        )
-
-        self.survival = SurvivalSettings(
+app_settings = AppSettings(
+    marvelous=MarvelousSettings(
+        receive_point=1,
+        send_bonus=BonusSettings(
+            step_interval=5,
+            daily_step_limit=10,
             point=1,
             reset_time=datetime.time(4, 0)
-        )
-
-        self.message = MessageSettings(
-            strict_time=1.0
-        )
-
-        self.user = UserSettings(
-            update_name_time=datetime.time(4, 0),
-            reset_marvelous_point_time=datetime.time(4, 0),
-            reset_marvelous_point_weekday=0
-        )
-
-
-app_settings = AppSettings()
+        ),
+        reaction="👏",
+        random_message_count=3
+    ),
+    booing=BooingSettings(
+        receive_point=-1,
+        send_penalty=BonusSettings(
+            step_interval=5,
+            daily_step_limit=10,
+            point=-1,
+            reset_time=datetime.time(4, 0)
+        ),
+        reaction="💩",
+        random_message_count=3
+    ),
+    super_marvelous=SuperMarvelousSettings(
+        receive_point=3,
+        send_point=1,
+        reaction="🙌",
+        initial_left_count=3,
+        reset_time=datetime.time(4, 0),
+        reset_weekday=0
+    ),
+    survival=SurvivalSettings(
+        point=1,
+        reset_time=datetime.time(4, 0)
+    ),
+    message=MessageSettings(
+        strict_time=1.0
+    ),
+    user=UserSettings(
+        update_name_time=datetime.time(4, 0),
+        reset_marvelous_point_time=datetime.time(4, 0),
+        reset_marvelous_point_weekday=0
+    )
+)

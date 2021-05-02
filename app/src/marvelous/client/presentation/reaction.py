@@ -96,13 +96,13 @@ async def register_users_if_not_exist(event: ReactionEvent):
 async def response_marvelous(event: ReactionEvent):
     if app_settings.marvelous.random_message_count == event.reaction.count:
         message = get_message("praise_something", event.receiver.display_name)
-        await message_gateway.send(message, event.channel)
+        await message_gateway.send(event.channel, content=message)
 
 
 async def response_booing(event: ReactionEvent):
     if app_settings.marvelous.random_message_count == event.reaction.count:
         message = get_message("comfort", event.receiver.display_name)
-        await message_gateway.send(message, event.channel)
+        await message_gateway.send(event.channel, content=message)
 
 
 async def response_super_marvelous(event: ReactionEvent, reaction: SuperMarvelousReaction):
@@ -110,13 +110,11 @@ async def response_super_marvelous(event: ReactionEvent, reaction: SuperMarvelou
         message = f":no_entry: {event.sender.display_name}    <<<    「めっちゃえらい！」の残り使用回数が0です"
     else:
         message = (
-            f"{event.sender.display_name}    >>>    "
-            f"{':raised_hands: ' * 3}"
-            f"**{str(event.receiver.display_name)}**"
-            f"{' :raised_hands:' * 3}"
+            f"{':raised_hands: '}**【{str(event.receiver.display_name)}】**{' :raised_hands:'}"
+            f"    *by {event.sender.display_name}*"
             f"\n{get_message('praise_something', event.receiver.display_name)}"
         )
-    await message_gateway.send(message, event.channel)
+    await message_gateway.send(event.channel, content=message)
 
 
 async def response(event: ReactionEvent, send: bool, reaction: Reaction):
