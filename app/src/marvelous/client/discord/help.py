@@ -9,6 +9,9 @@ logger = getLogger(__name__)
 help_text = (
     "各ユーザーの 👏えらいポイント を管理するbotです。\n"
     "\n"
+    "👏えらいポイント は、毎週月曜4:00にリセットされます。\n"
+    "このとき、ポイントを多く集めた人を表彰します。たくさんポイントを集められるようにがんばりましょう！\n"
+    "\n"
     "他のユーザーのメッセージに以下のリアクションを付けると、アクションが可能です。\n"
     "```md\n"
     f"{app_settings.marvelous.reaction} 「えらい！」を送る\n"
@@ -40,11 +43,18 @@ help_text = (
     "`!erai me`      : 自分のステータスを表示する\n"
     "`!erai ranking` : えらいポイントのランキングを表示する\n"
     "`!erai help`    : ヘルプを表示する\n"
+    "\n"
+    "【開発者】\n"
+    "Rinia\n"
+    "【開発ソース】\n"
+    "https://github.com/watano1168/marvelous\n"
+    "【問題点・改善案は、こちらから報告をお願いします】\n"
+    "https://github.com/watano1168/marvelous/issues"
 )
 
 
 def get_help_embed() -> discord.Embed:
-    return discord.Embed(title="エライさんbot - ヘルプ", description=help_text, color=0x00ff00)
+    return discord.Embed(title="ヘルプ", description=help_text, color=0x00ff00)
 
 
 async def show_help_on_mention(message: discord.Message):
