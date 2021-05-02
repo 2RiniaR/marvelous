@@ -1,6 +1,6 @@
 import asyncio
 import discord
-from marvelous.settings import app_settings
+from marvelous.settings import env
 from logging import getLogger
 from typing import Optional
 from . import client
@@ -11,7 +11,6 @@ logger = getLogger(__name__)
 
 class DiscordMessageGateway:
     strict: bool
-    default_channel: Optional[discord.TextChannel]
 
     def __init__(self):
         self.loop = asyncio.get_event_loop()
@@ -20,7 +19,13 @@ class DiscordMessageGateway:
     async def send_to_default_channel(
             self, content: str = None, embed: discord.Embed = None, force: bool = False
     ):
-        default_channel = client.bot.get_channel(app_settings.message.default_channel_id)
+        try:
+            default_channel_id: int = int(env.discord_default_channel_id)
+        except ValueError:
+            logger.warning("Default channel id is invalid. Sending message to default will be canceled.")
+            return
+
+        default_channel = client.bot.get_channel(default_channel_id)
         if default_channel is None:
             logger.warning("Default channel is None. Sending message to default was canceled.")
             return

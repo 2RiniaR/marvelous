@@ -46,7 +46,6 @@ class SurvivalSettings:
 @dataclass()
 class MessageSettings:
     strict_time: float
-    default_channel_id: Optional[int]
 
 
 @dataclass()
@@ -102,14 +101,7 @@ app_settings = AppSettings(
         reset_time=datetime.time(4, 0)
     ),
     message=MessageSettings(
-        strict_time=1.0,
-        # ファイルサーバー上のファイルに設定を保存できるようにする
-        #     -> 理想だが、デプロイ先がHerokuの場合はAmazon S3などの外部サービスを利用する必要がある
-        # メモリ上に設定を保持する
-        #     -> Herokuの稼働サーバーは1日1回再起動されるため、メモリ上には設定を保持できない
-        # 特定のサーバーでのみの運用となるので、コストを考慮してあえてハードコーディングをしています
-        # default_channel_id=690909527461199922
-        default_channel_id=829402921010987049
+        strict_time=1.0
     ),
     user=UserSettings(
         update_name_time=datetime.time(4, 0),
