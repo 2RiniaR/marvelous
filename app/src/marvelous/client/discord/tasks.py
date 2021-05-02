@@ -15,7 +15,7 @@ async def check_timer():
     check_reset_daily_steps()
     check_reset_survival_bonus()
     check_reset_super_marvelous_left()
-    check_reset_marvelous_point()
+    await check_reset_marvelous_point()
 
 
 def setup(_: commands.Bot):

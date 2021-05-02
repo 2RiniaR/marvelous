@@ -2,6 +2,8 @@ import asyncio
 import discord
 from marvelous.settings import app_settings
 from logging import getLogger
+from typing import Optional
+from . import client
 
 
 logger = getLogger(__name__)
@@ -9,21 +11,40 @@ logger = getLogger(__name__)
 
 class DiscordMessageGateway:
     strict: bool
+    default_channel: Optional[discord.TextChannel]
 
     def __init__(self):
         self.loop = asyncio.get_event_loop()
         self.strict = False
 
-    async def send(self, text: str, channel: discord.TextChannel):
-        asyncio.ensure_future(self.__send_with_strict_lock(text, channel), loop=self.loop)
+    async def send_to_default_channel(
+            self, content: str = None, embed: discord.Embed = None, force: bool = False
+    ):
+        default_channel = client.bot.get_channel(app_settings.message.default_channel_id)
+        if default_channel is None:
+            logger.warning("Default channel is None. Sending message to default was canceled.")
+            return
+        await self.send(default_channel, content=content, embed=embed, force=force)
 
-    async def __send_with_strict_lock(self, text: str, channel: discord.TextChannel):
+    async def send(
+            self, channel: discord.TextChannel, content: str = None, embed: discord.Embed = None, force: bool = False
+    ):
+        asyncio.ensure_future(
+            self.__send_with_strict_lock(channel, content=content, embed=embed, force=force), loop=self.loop)
+
+    async def __send_with_strict_lock(
+            self, channel: discord.TextChannel, content: str = None, embed: discord.Embed = None, force: bool = False
+    ):
+        if force:
+            await channel.send(content, embed=embed)
+            return
+
         if self.strict:
             return
         self.strict = True
 
         try:
-            await channel.send(text)
+            await channel.send(content, embed=embed)
             await asyncio.sleep(app_settings.message.strict_time)
         except Exception as err:
             logger.error(str(err))

@@ -15,7 +15,7 @@ logger = getLogger(__name__)
 
 async def praise_survival(user: discord.Member, channel: discord.TextChannel):
     message = get_message("praise_survival", user.display_name)
-    await message_gateway.send(message, channel)
+    await message_gateway.send(channel, content=message, force=True)
 
 
 def is_event_available(user: discord.Member) -> bool:
