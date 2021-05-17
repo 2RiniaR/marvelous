@@ -29,6 +29,7 @@ async def start(token: str):
         command_prefix=COMMAND_PREFIX,
         help_command=MarvelousHelpCommand(),
         intents=discord.Intents.all(),
+        proxy=env.proxy
     )
 
     for extension in INITIAL_EXTENSIONS:
