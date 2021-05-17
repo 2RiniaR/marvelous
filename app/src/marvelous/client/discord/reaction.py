@@ -36,9 +36,6 @@ class ReactionStateCache:
 
     @staticmethod
     def to_event_hash(ctx: ReactionContext) -> int:
-        # return hash((
-        #     ctx.guild_id, ctx.user_id, ctx.channel_id, ctx.message_id, ctx.hashed_emoji
-        # ))
         return (ctx.guild_id << (64 * 0)) \
                | (ctx.user_id << (64 * 1)) \
                | (ctx.channel_id << (64 * 2)) \
@@ -79,11 +76,6 @@ class ReactionStateCache:
 
 
 reaction_cache = ReactionStateCache()
-
-
-def get_reaction_from_message(emoji: discord.PartialEmoji, message: discord.Message) -> Optional[discord.Reaction]:
-    # リアクションが取り消された結果、そのメッセージへのリアクションが消えた（個数が0になった）場合はNoneになる
-    return first_match(message.reactions, pred=lambda r: str(r.emoji) == str(emoji), default=None)
 
 
 async def fetch_reaction_event(ctx: ReactionContext) -> Optional[ReactionEvent]:
