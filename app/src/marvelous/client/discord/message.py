@@ -2,7 +2,7 @@ import asyncio
 import discord
 from marvelous.settings import env
 from logging import getLogger
-from typing import Optional
+from marvelous.settings import app_settings
 from . import client
 
 
