@@ -95,15 +95,15 @@ async def fetch_reaction_event(ctx: ReactionContext) -> Optional[ReactionEvent]:
     if not isinstance(receiver, discord.Member):
         return None
 
-    reaction = first_match(message.reactions, pred=lambda r: str(r.emoji) == ctx.emoji_str, default=None)
-    if reaction is None:
-        return None
+    reaction: Optional[discord.Reaction] = first_match(
+        message.reactions, pred=lambda r: str(r.emoji) == ctx.emoji_str, default=None)
 
     return ReactionEvent(
         sender=sender,
         channel=channel,
         receiver=receiver,
-        reaction=reaction
+        reaction=reaction,
+        emoji=ctx.emoji_str
     )
 
 
