@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import datetime
-from typing import Optional
 
 
 @dataclass()
@@ -46,6 +45,7 @@ class SurvivalSettings:
 @dataclass()
 class MessageSettings:
     strict_time: float
+    ranking_limit: int
 
 
 @dataclass()
@@ -101,7 +101,8 @@ app_settings = AppSettings(
         reset_time=datetime.time(4, 0)
     ),
     message=MessageSettings(
-        strict_time=1.0
+        strict_time=1.0,
+        ranking_limit=8
     ),
     user=UserSettings(
         update_name_time=datetime.time(4, 0),
