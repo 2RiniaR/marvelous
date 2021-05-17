@@ -29,7 +29,8 @@ class ReactionEvent:
     sender: discord.Member
     receiver: discord.Member
     channel: discord.TextChannel
-    reaction: discord.Reaction
+    reaction: Optional[discord.Reaction]
+    emoji: str
 
 
 def get_marvelous() -> MarvelousReaction:
@@ -67,13 +68,12 @@ def get_reaction(reaction_type: ReactionType) -> Optional[Reaction]:
     return None
 
 
-def get_reaction_type(emoji: discord.PartialEmoji) -> Optional[ReactionType]:
-    str_emoji = str(emoji)
-    if str_emoji == app_settings.marvelous.reaction:
+def get_reaction_type(emoji: str) -> Optional[ReactionType]:
+    if emoji == app_settings.marvelous.reaction:
         return ReactionType.Marvelous
-    elif str_emoji == app_settings.super_marvelous.reaction:
+    elif emoji == app_settings.super_marvelous.reaction:
         return ReactionType.SuperMarvelous
-    elif str_emoji == app_settings.booing.reaction:
+    elif emoji == app_settings.booing.reaction:
         return ReactionType.Booing
     return None
 
@@ -94,12 +94,16 @@ async def register_users_if_not_exist(event: ReactionEvent):
 
 
 async def response_marvelous(event: ReactionEvent):
+    if event.reaction is None:
+        return
     if app_settings.marvelous.random_message_count == event.reaction.count:
         message = get_message("praise_something", event.receiver.display_name)
         await message_gateway.send(event.channel, content=message)
 
 
 async def response_booing(event: ReactionEvent):
+    if event.reaction is None:
+        return
     if app_settings.marvelous.random_message_count == event.reaction.count:
         message = get_message("comfort", event.receiver.display_name)
         await message_gateway.send(event.channel, content=message)
@@ -131,7 +135,7 @@ async def run_reaction_event(event: ReactionEvent, send: bool):
         return
     await register_users_if_not_exist(event)
 
-    reaction_type = get_reaction_type(event.reaction.emoji)
+    reaction_type = get_reaction_type(event.emoji)
     reaction = get_reaction(reaction_type)
     if reaction is None:
         return
