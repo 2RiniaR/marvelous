@@ -4,6 +4,7 @@ from typing import Iterable
 from marvelous.client.discord import message_gateway
 from logging import getLogger
 from marvelous.models.errors import ModelError
+from marvelous.settings import app_settings
 
 
 logger = getLogger(__name__)
@@ -28,5 +29,5 @@ async def show_ranking(channel: discord.TextChannel):
         logger.error(str(err))
         return
 
-    message = get_ranking_message(users)
+    message = get_ranking_message(users[:app_settings.message.ranking_limit])
     await message_gateway.send(channel, content=message)
