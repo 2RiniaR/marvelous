@@ -1,31 +1,51 @@
 import discord
-from marvelous.models.user import (
-    register_user, get_user, is_user_exist, User, DailyBonus, reset_marvelous_point, get_ranking
-)
-from marvelous.models.errors import ModelError
+import marvelous.models as models
 from marvelous.settings import app_settings
 from marvelous.client.discord import message_gateway
 from logging import getLogger
 from marvelous.helpers import is_now_time, is_now_weekday
-from typing import List
+from typing import List, Optional
+from ..discord.user import user_cache, UserContext
 
 
 logger = getLogger(__name__)
 
 
 def get_initial_user(user: discord.Member):
-    return User(
+    return models.User(
         discord_id=user.id,
         display_name=user.display_name,
-        marvelous_bonus=DailyBonus(step=0, today=0),
-        booing_penalty=DailyBonus(step=0, today=0),
+        marvelous_bonus=models.DailyBonus(step=0, today=0),
+        booing_penalty=models.DailyBonus(step=0, today=0),
         super_marvelous_left=app_settings.super_marvelous.initial_left_count,
         survival_bonus_given=False,
         point=0,
     )
 
 
-def get_status_message(user: User) -> str:
+def is_user_exist(user_id: int) -> bool:
+    state: Optional[UserContext] = user_cache.get_state(user_id)
+    if state is not None:
+        return state.registered
+    state = update_user_cache(user_id)
+    return state.registered
+
+
+def update_user_cache(user_id: int) -> UserContext:
+    user = models.get_user(user_id)
+    if user is None:
+        state = UserContext(registered=False, survival_bonus_given=False)
+    else:
+        state = UserContext(registered=True, survival_bonus_given=user.survival_bonus_given)
+    user_cache.set_state(user_id, state)
+    return state
+
+
+def clear_user_cache() -> None:
+    user_cache.clear()
+
+
+def get_status_message(user: models.User) -> str:
     marvelous_bonus_left = app_settings.marvelous.send_bonus.step_interval - user.marvelous_bonus.step
     booing_penalty_left = app_settings.booing.send_penalty.step_interval - user.booing_penalty.step
     today_marvelous_count = min(app_settings.marvelous.send_bonus.daily_step_limit, user.marvelous_bonus.today)
@@ -53,8 +73,8 @@ async def show_status(user: discord.Member, channel: discord.TextChannel):
         await register_user_implicit(user)
 
     try:
-        result_user = get_user(user.id)
-    except ModelError as e:
+        result_user = models.get_user(user.id)
+    except models.ModelError as e:
         logger.error(str(e))
         return
 
@@ -63,10 +83,13 @@ async def show_status(user: discord.Member, channel: discord.TextChannel):
 
 
 async def register_user_implicit(author: discord.Member):
+    if is_user_exist(author.id):
+        return
     try:
-        user: User = get_initial_user(author)
-        register_user(user)
-    except ModelError as err:
+        user: models.User = get_initial_user(author)
+        models.register_user(user)
+        update_user_cache(user.discord_id)
+    except models.ModelError as err:
         logger.error(str(err))
 
 
@@ -78,8 +101,8 @@ async def check_reset_marvelous_point():
     await run_reset_marvelous_point()
 
 
-def get_weekly_message(ranking: List[User]) -> str:
-    def get_user_column(index: int, user: User) -> str:
+def get_weekly_message(ranking: List[models.User]) -> str:
+    def get_user_column(index: int, user: models.User) -> str:
         return f"#{str(index + 1).zfill(2)} - {f'👏{user.point}'.rjust(4)}  {user.display_name}"
 
     if len(ranking) == 0:
@@ -103,8 +126,8 @@ def get_weekly_message(ranking: List[User]) -> str:
 
 async def send_weekly_message():
     try:
-        users = get_ranking()
-    except ModelError as err:
+        users = models.get_ranking()
+    except models.ModelError as err:
         logger.error(str(err))
         return
     message = get_weekly_message(list(users))
@@ -115,7 +138,7 @@ async def send_weekly_message():
 async def run_reset_marvelous_point():
     await send_weekly_message()
     try:
-        reset_marvelous_point()
-    except ModelError as err:
+        models.reset_marvelous_point()
+    except models.ModelError as err:
         logger.error(str(err))
         return

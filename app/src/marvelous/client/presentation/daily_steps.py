@@ -1,7 +1,6 @@
-from marvelous.models.daily_bonus import reset_daily_steps
 from marvelous.settings import app_settings
 from marvelous.helpers import is_now_time
-from marvelous.models.errors import ModelError
+import marvelous.models as models
 from logging import getLogger
 
 
@@ -17,7 +16,7 @@ def check_reset_daily_steps():
 
 def run_reset_daily_steps():
     try:
-        reset_daily_steps()
-    except ModelError as err:
+        models.reset_daily_steps()
+    except models.ModelError as err:
         logger.error(str(err))
         return

@@ -1,7 +1,6 @@
-from marvelous.models.super_marvelous import reset_super_marvelous_left
 from marvelous.settings import app_settings
 from marvelous.helpers import is_now_time, is_now_weekday
-from marvelous.models.errors import ModelError
+import marvelous.models as models
 from logging import getLogger
 
 
@@ -18,7 +17,7 @@ def check_reset_super_marvelous_left():
 
 def run_reset_super_marvelous_left():
     try:
-        reset_super_marvelous_left(app_settings.super_marvelous.initial_left_count)
-    except ModelError as err:
+        models.reset_super_marvelous_left(app_settings.super_marvelous.initial_left_count)
+    except models.ModelError as err:
         logger.error(str(err))
         return
