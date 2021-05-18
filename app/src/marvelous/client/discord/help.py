@@ -4,12 +4,14 @@ from logging import getLogger
 from . import client
 from marvelous.settings import app_settings
 
+WEEKDAY_DISPLAY = ["月", "火", "水", "木", "金", "土", "日"]
 
 logger = getLogger(__name__)
 help_text = (
     "各ユーザーの 👏えらいポイント を管理するbotです。\n"
     "\n"
-    "👏えらいポイント は、毎週月曜4:00にリセットされます。\n"
+    f"👏えらいポイント は、毎週{WEEKDAY_DISPLAY[app_settings.user.reset_marvelous_point_weekday]}曜"
+    f"{app_settings.user.reset_marvelous_point_time.strftime('%H:%M')}にリセットされます。\n"
     "このとき、ポイントを多く集めた人を表彰します。たくさんポイントを集められるようにがんばりましょう！\n"
     "\n"
     "他のユーザーのメッセージに以下のリアクションを付けると、アクションが可能です。\n"
@@ -24,7 +26,8 @@ help_text = (
     f"    - 相手に👏{'{:+}'.format(app_settings.super_marvelous.receive_point)}\n"
     f"    - 自分に👏{'{:+}'.format(app_settings.super_marvelous.send_point)}\n"
     f"    - 各ユーザー、1週間に{app_settings.super_marvelous.initial_left_count}回まで"
-    f"（毎週日曜4:00に回数リセット、残り回数は !erai me で確認可能）\n"
+    f"（毎週{WEEKDAY_DISPLAY[app_settings.super_marvelous.reset_weekday]}曜"
+    f"{app_settings.super_marvelous.reset_time.strftime('%H:%M')}に回数リセット、残り回数は !erai me で確認可能）\n"
     "```\n"
     "\n"
     "その他、以下のアクションによって 👏えらいポイント が変動します。\n"
