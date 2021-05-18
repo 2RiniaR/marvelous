@@ -1,17 +1,16 @@
 import discord
-from marvelous.models.user import get_ranking, User
 from typing import Iterable
 from marvelous.client.discord import message_gateway
 from logging import getLogger
-from marvelous.models.errors import ModelError
+import marvelous.models as models
 from marvelous.settings import app_settings
 
 
 logger = getLogger(__name__)
 
 
-def get_ranking_message(users: Iterable[User]) -> str:
-    def get_user_column(index: int, user: User) -> str:
+def get_ranking_message(users: Iterable[models.User]) -> str:
+    def get_user_column(index: int, user: models.User) -> str:
         return f"#{str(index + 1).zfill(2)} - {f'👏{user.point}'.rjust(4)}  {user.display_name}"
 
     return "\n".join([
@@ -24,8 +23,8 @@ def get_ranking_message(users: Iterable[User]) -> str:
 
 async def show_ranking(channel: discord.TextChannel):
     try:
-        users = get_ranking()
-    except ModelError as err:
+        users = models.get_ranking()
+    except models.ModelError as err:
         logger.error(str(err))
         return
 

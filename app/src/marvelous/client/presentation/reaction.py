@@ -5,14 +5,10 @@ from enum import IntEnum
 from dataclasses import dataclass
 from typing import Optional
 from marvelous.settings import app_settings
-from marvelous.models.reaction import send_reaction, cancel_reaction, Reaction
-from marvelous.models.user import is_user_exist
-from marvelous.models.errors import ModelError
-from marvelous.models.super_marvelous import SuperMarvelousReaction, SuperMarvelousSettings
-from marvelous.models.marvelous import MarvelousReaction, MarvelousSettings
-from marvelous.models.booing import BooingReaction, BooingSettings
+import marvelous.models as models
 from marvelous.settings.messages import get_message
 from ..discord import message_gateway
+from .user import is_user_exist
 
 
 logger = getLogger(__name__)
@@ -33,8 +29,8 @@ class ReactionEvent:
     emoji: str
 
 
-def get_marvelous() -> MarvelousReaction:
-    return MarvelousReaction(settings=MarvelousSettings(
+def get_marvelous() -> models.MarvelousReaction:
+    return models.MarvelousReaction(settings=models.MarvelousSettings(
         daily_step_limit=app_settings.marvelous.send_bonus.daily_step_limit,
         steps_per_bonus=app_settings.marvelous.send_bonus.step_interval,
         sender_bonus_point=app_settings.marvelous.send_bonus.point,
@@ -42,15 +38,15 @@ def get_marvelous() -> MarvelousReaction:
     ))
 
 
-def get_super_marvelous() -> SuperMarvelousReaction:
-    return SuperMarvelousReaction(settings=SuperMarvelousSettings(
+def get_super_marvelous() -> models.SuperMarvelousReaction:
+    return models.SuperMarvelousReaction(settings=models.SuperMarvelousSettings(
         sender_point=app_settings.super_marvelous.send_point,
         receiver_point=app_settings.super_marvelous.receive_point
     ))
 
 
-def get_booing() -> BooingReaction:
-    return BooingReaction(settings=BooingSettings(
+def get_booing() -> models.BooingReaction:
+    return models.BooingReaction(settings=models.BooingSettings(
         daily_step_limit=app_settings.booing.send_penalty.daily_step_limit,
         steps_per_bonus=app_settings.booing.send_penalty.step_interval,
         sender_bonus_point=app_settings.booing.send_penalty.point,
@@ -58,7 +54,7 @@ def get_booing() -> BooingReaction:
     ))
 
 
-def get_reaction(reaction_type: ReactionType) -> Optional[Reaction]:
+def get_reaction(reaction_type: ReactionType) -> Optional[models.Reaction]:
     if reaction_type == ReactionType.Marvelous:
         return get_marvelous()
     elif reaction_type == ReactionType.SuperMarvelous:
@@ -86,13 +82,6 @@ def is_event_available(event: ReactionEvent) -> bool:
     )
 
 
-async def register_users_if_not_exist(event: ReactionEvent):
-    if not is_user_exist(event.sender.id):
-        await register_user_implicit(event.sender)
-    if not is_user_exist(event.receiver.id):
-        await register_user_implicit(event.receiver)
-
-
 async def response_marvelous(event: ReactionEvent):
     if event.reaction is None:
         return
@@ -109,7 +98,7 @@ async def response_booing(event: ReactionEvent):
         await message_gateway.send(event.channel, content=message)
 
 
-async def response_super_marvelous(event: ReactionEvent, reaction: SuperMarvelousReaction):
+async def response_super_marvelous(event: ReactionEvent, reaction: models.SuperMarvelousReaction):
     if reaction.result.no_left_count:
         message = f":no_entry: {event.sender.display_name}    <<<    「めっちゃえらい！」の残り使用回数が0です"
     else:
@@ -121,19 +110,21 @@ async def response_super_marvelous(event: ReactionEvent, reaction: SuperMarvelou
     await message_gateway.send(event.channel, content=message)
 
 
-async def response(event: ReactionEvent, send: bool, reaction: Reaction):
-    if send and isinstance(reaction, MarvelousReaction):
+async def response(event: ReactionEvent, send: bool, reaction: models.Reaction):
+    if send and isinstance(reaction, models.MarvelousReaction):
         await response_marvelous(event)
-    elif send and isinstance(reaction, BooingReaction):
+    elif send and isinstance(reaction, models.BooingReaction):
         await response_booing(event)
-    elif send and isinstance(reaction, SuperMarvelousReaction):
+    elif send and isinstance(reaction, models.SuperMarvelousReaction):
         await response_super_marvelous(event, reaction)
 
 
 async def run_reaction_event(event: ReactionEvent, send: bool):
     if not is_event_available(event):
         return
-    await register_users_if_not_exist(event)
+
+    await register_user_implicit(event.sender)
+    await register_user_implicit(event.receiver)
 
     reaction_type = get_reaction_type(event.emoji)
     reaction = get_reaction(reaction_type)
@@ -142,10 +133,10 @@ async def run_reaction_event(event: ReactionEvent, send: bool):
 
     try:
         if send:
-            send_reaction(event.sender.id, event.receiver.id, reaction)
+            models.send_reaction(event.sender.id, event.receiver.id, reaction)
         else:
-            cancel_reaction(event.sender.id, event.receiver.id, reaction)
-    except ModelError as err:
+            models.cancel_reaction(event.sender.id, event.receiver.id, reaction)
+    except models.ModelError as err:
         logger.error(str(err))
         return
 
