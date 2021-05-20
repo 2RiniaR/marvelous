@@ -1,13 +1,8 @@
-from marvelous.settings.env import discord_token
-from marvelous.data_store.mysql.connection import wait_ready
-from marvelous.client import start
-from marvelous.settings import env
+import marvelous.settings.env as env
+import marvelous.data_store as data_store
+import marvelous.client.discord as discord
 import logging
 import asyncio
-
-
-async def wait_db_ready():
-    await wait_ready()
 
 
 async def startup_async():
@@ -17,8 +12,8 @@ async def startup_async():
         "===============================\n"
     ))
     logging.basicConfig(level=logging.DEBUG if env.run_environment == "development" else logging.WARNING)
-    await wait_db_ready()
-    await start(discord_token)
+    await data_store.wait_ready()
+    await discord.start(env.discord_token)
 
 
 def startup():
