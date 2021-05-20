@@ -1,27 +1,25 @@
 from discord.ext import commands
-from ..presentation import (
-    run_reset_super_marvelous_left, run_reset_survival_bonus, run_reset_daily_steps, run_reset_marvelous_point
-)
+from .. import presentation
 
 
 @commands.command()
 async def reset_survival_bonus(ctx: commands.Context):
-    run_reset_survival_bonus()
+    presentation.run_reset_survival_bonus()
 
 
 @commands.command()
 async def reset_super_marvelous_left(ctx: commands.Context):
-    run_reset_super_marvelous_left()
+    presentation.run_reset_super_marvelous_left()
 
 
 @commands.command()
 async def reset_daily_steps(ctx: commands.Context):
-    run_reset_daily_steps()
+    presentation.run_reset_daily_steps()
 
 
 @commands.command()
 async def reset_marvelous_point(ctx: commands.Context):
-    await run_reset_marvelous_point()
+    await presentation.run_reset_marvelous_point()
 
 
 def setup(bot: commands.Bot):

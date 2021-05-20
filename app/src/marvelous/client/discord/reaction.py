@@ -3,7 +3,7 @@ from . import client
 from marvelous.helpers import first_match
 from dataclasses import dataclass
 from typing import Iterable, Optional, Dict
-from ..presentation.reaction import ReactionEvent, add_reaction, remove_reaction
+from .. import presentation
 from marvelous.settings import app_settings
 from logging import getLogger
 
@@ -78,7 +78,7 @@ class ReactionStateCache:
 reaction_cache = ReactionStateCache()
 
 
-async def fetch_reaction_event(ctx: ReactionContext) -> Optional[ReactionEvent]:
+async def fetch_reaction_event(ctx: ReactionContext) -> Optional[presentation.ReactionEvent]:
     guild: discord.Guild = client.bot.get_guild(ctx.guild_id)
     sender: discord.Member = guild.get_member(ctx.user_id)
     channel: discord.TextChannel = guild.get_channel(ctx.channel_id)
@@ -98,7 +98,7 @@ async def fetch_reaction_event(ctx: ReactionContext) -> Optional[ReactionEvent]:
     reaction: Optional[discord.Reaction] = first_match(
         message.reactions, pred=lambda r: str(r.emoji) == ctx.emoji_str, default=None)
 
-    return ReactionEvent(
+    return presentation.ReactionEvent(
         sender=sender,
         channel=channel,
         receiver=receiver,
@@ -116,9 +116,9 @@ async def reflect_state(state: ReactionState):
         return
 
     if state.current_state:
-        await add_reaction(event)
+        await presentation.add_reaction(event)
     else:
-        await remove_reaction(event)
+        await presentation.remove_reaction(event)
 
 
 async def reflect_caches():
