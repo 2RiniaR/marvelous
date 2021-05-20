@@ -1,5 +1,6 @@
-from .. import connection
+from marvelous.data_store.mysql import connection
 import mysql.connector
+from .connection import connection
 from logging import getLogger
 
 
