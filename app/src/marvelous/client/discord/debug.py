@@ -22,8 +22,14 @@ async def reset_marvelous_point(ctx: commands.Context):
     await presentation.run_reset_marvelous_point()
 
 
+@commands.command()
+async def check_github_bonus(ctx: commands.Context):
+    presentation.run_github_bonus()
+
+
 def setup(bot: commands.Bot):
     bot.add_command(reset_survival_bonus)
     bot.add_command(reset_super_marvelous_left)
     bot.add_command(reset_daily_steps)
     bot.add_command(reset_marvelous_point)
+    bot.add_command(check_github_bonus)
