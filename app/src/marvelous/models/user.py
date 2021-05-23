@@ -2,8 +2,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from .daily_bonus import DailyBonus
 import marvelous.data_store as data_store
-from marvelous.models.errors import UserNotFoundError, AlreadyExistError, DataFetchError, DataUpdateError
-from typing import Iterable, Optional
+from marvelous.models.errors import (
+    UserNotFoundError, AlreadyExistError, DataFetchError, DataUpdateError, GitHubUserNotFoundError,
+    GitHubIDTooLongError
+)
+import marvelous.github as github
+from typing import List, Optional
 
 
 @dataclass()
@@ -15,6 +19,7 @@ class User:
     super_marvelous_left: int = None
     survival_bonus_given: bool = None
     point: int = None
+    github_id: Optional[str] = None
 
 
 def is_user_exist(discord_id: int) -> bool:
@@ -52,7 +57,7 @@ def update_name(discord_id: int, name: str) -> None:
         raise DataUpdateError from err
 
 
-def get_ranking() -> Iterable[User]:
+def get_ranking() -> List[User]:
     """ユーザーランキングを取得する"""
     try:
         users: List[User] = data_store.users.get_all_sorted_by_marvelous_point()
