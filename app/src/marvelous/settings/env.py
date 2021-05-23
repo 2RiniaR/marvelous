@@ -2,6 +2,7 @@ import os
 
 discord_token: str = os.environ.get("DISCORD_TOKEN")
 discord_default_channel_id: str = os.environ.get("DISCORD_DEFAULT_CHANNEL_ID")
+github_bearer_token: str = os.environ.get("GITHUB_BEARER_TOKEN")
 run_environment: str = os.environ.get("RUN_ENVIRONMENT")
 
 mysql_host: str = os.environ.get("MYSQL_HOST")
