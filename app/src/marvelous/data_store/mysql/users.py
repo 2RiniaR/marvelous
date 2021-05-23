@@ -1,6 +1,10 @@
 import marvelous.models as models
-from typing import Dict, Tuple, Iterable, Optional
+from typing import Dict, Tuple, List, Optional
 from .execute import fetch_one, fetch_all, commit
+from logging import getLogger
+
+
+logger = getLogger(__name__)
 
 
 def initialize_table() -> None:
@@ -78,7 +82,16 @@ def get_user_by_id(discord_id: int) -> Optional[models.User]:
     return user
 
 
-def get_users_marvelous_point_ranking() -> Iterable[models.User]:
+def get_all() -> List[models.User]:
+    query = "SELECT * FROM users;"
+    data = fetch_all(query)
+    if data is None:
+        return []
+    users: List[models.User] = [to_user(row) for row in data]
+    return users
+
+
+def get_all_sorted_by_marvelous_point() -> List[models.User]:
     query = "SELECT * FROM users ORDER BY marvelous_point DESC;"
     data = fetch_all(query)
     if data is None:
