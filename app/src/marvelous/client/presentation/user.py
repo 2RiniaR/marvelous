@@ -6,6 +6,7 @@ from logging import getLogger
 from marvelous.helpers import is_now_time, is_now_weekday
 from typing import List, Optional
 from ..discord.user import user_cache, UserContext
+from .ranking import get_ranking
 
 
 logger = getLogger(__name__)
@@ -51,11 +52,11 @@ def get_status_message(user: models.User) -> str:
     today_marvelous_count = min(app_settings.marvelous.send_bonus.daily_step_limit, user.marvelous_bonus.today)
     today_booing_count = min(app_settings.booing.send_penalty.daily_step_limit, user.booing_penalty.today)
     return "\n".join([
-        "```",
+        f"```",
         f"【{user.display_name}】",
         "累計 👏" + str(user.point),
         f"使用可能 {app_settings.super_marvelous.reaction}" + str(max(0, user.super_marvelous_left)),
-        "",
+        f"",
         (
             f":   {app_settings.marvelous.reaction}ボーナスまであと {app_settings.marvelous.reaction}{marvelous_bonus_left}  "
             f"（本日分カウント {today_marvelous_count}/{app_settings.marvelous.send_bonus.daily_step_limit}）"
@@ -64,18 +65,19 @@ def get_status_message(user: models.User) -> str:
             f":   {app_settings.booing.reaction}ペナルティまであと {app_settings.booing.reaction}{booing_penalty_left}  "
             f"（本日分カウント {today_booing_count}/{app_settings.booing.send_penalty.daily_step_limit}）"
         ),
-        "```"
+        f"",
+        f"GitHub ID: {user.github_id if user.github_id is not None else '(未登録)'}"
+        f"```"
     ])
 
 
 async def show_status(user: discord.Member, channel: discord.TextChannel):
-    if not is_user_exist(user.id):
-        await register_user_implicit(user)
+    await register_user_implicit(user)
 
     try:
         result_user = models.get_user(user.id)
-    except models.ModelError as e:
-        logger.error(str(e))
+    except models.ModelError:
+        logger.exception("An unknown exception raised while getting user.")
         return
 
     message = get_status_message(result_user)
@@ -89,8 +91,8 @@ async def register_user_implicit(author: discord.Member):
         user: models.User = get_initial_user(author)
         models.register_user(user)
         update_user_cache(user.discord_id)
-    except models.ModelError as err:
-        logger.error(str(err))
+    except models.ModelError:
+        logger.exception("An unknown exception raised while registering user.")
 
 
 async def check_reset_marvelous_point():
@@ -125,14 +127,10 @@ def get_weekly_message(ranking: List[models.User]) -> str:
 
 
 async def send_weekly_message():
-    try:
-        users = models.get_ranking()
-    except models.ModelError as err:
-        logger.error(str(err))
-        return
+    users = get_ranking()
     message = get_weekly_message(list(users))
     embed = discord.Embed(title="今週のえらい", description=message, color=0xe8b77b)
-    await message_gateway.send_to_default_channel(embed=embed)
+    await message_gateway.send_to_default_channel(embed=embed, force=True)
 
 
 async def run_reset_marvelous_point():

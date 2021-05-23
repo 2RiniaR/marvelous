@@ -18,6 +18,6 @@ def check_reset_super_marvelous_left():
 def run_reset_super_marvelous_left():
     try:
         models.reset_super_marvelous_left(app_settings.super_marvelous.initial_left_count)
-    except models.ModelError as err:
-        logger.error(str(err))
+    except models.ModelError:
+        logger.error("An unknown exception raised while resetting super marvelous left count.")
         return
