@@ -13,6 +13,7 @@ async def startup_async():
     ))
     logging.basicConfig(level=logging.DEBUG if env.run_environment == "development" else logging.WARNING)
     await data_store.wait_ready()
+    data_store.initialize_tables()
     await discord.start(env.discord_token)
 
 
