@@ -139,6 +139,44 @@ async def run_reset_marvelous_point():
     await send_weekly_message()
     try:
         models.reset_marvelous_point()
-    except models.ModelError as err:
-        logger.error(str(err))
+    except models.ModelError:
+        logger.exception("An unknown exception raised while resetting marvelous point.")
         return
+
+
+async def register_github(user: discord.Member, channel: discord.TextChannel, github_id: str):
+    await register_user_implicit(user)
+
+    try:
+        models.register_github(user.id, github_id)
+    except models.GitHubIDTooLongError as err:
+        message = f":no_entry: GitHub IDが長すぎます。{err.max_length}文字以下の文字列を指定してください。"
+        await message_gateway.send(channel, content=message, force=True)
+        return
+    except models.GitHubUserNotFoundError as err:
+        message = f":no_entry: GitHub ID({err.user_id})が存在しません。"
+        await message_gateway.send(channel, content=message, force=True)
+        return
+    except models.ModelError:
+        logger.exception("An unknown exception raised while registering github id.")
+        message = f":no_entry: GitHub ID({github_id})の登録に失敗しました。"
+        await message_gateway.send(channel, content=message, force=True)
+        return
+
+    message = f":white_check_mark: GitHub ID({github_id})を更新しました。"
+    await message_gateway.send(channel, content=message, force=True)
+
+
+async def unregister_github(user: discord.Member, channel: discord.TextChannel):
+    await register_user_implicit(user)
+
+    try:
+        models.unregister_github(user.id)
+    except models.ModelError:
+        logger.exception("An unknown exception raised while unregistering github id.")
+        message = f":no_entry: GitHub IDの登録解除に失敗しました。"
+        await message_gateway.send(channel, content=message, force=True)
+        return
+
+    message = f":white_check_mark: GitHub IDの登録を解除しました。"
+    await message_gateway.send(channel, content=message)
