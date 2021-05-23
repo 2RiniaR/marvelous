@@ -8,7 +8,7 @@ from .daily_bonus import (
 
 from .errors import (
     UserNotFoundError, AlreadyExistError, DataFetchError, DataUpdateError, CalculateError, ModelError,
-    SelfUserReactionError, GitHubUserNotFoundError, GitHubIDTooLongError
+    SelfUserReactionError, GitHubUserNotFoundError, GitHubIDTooLongError, GitHubNotRegisteredError
 )
 
 from .github_bonus import (

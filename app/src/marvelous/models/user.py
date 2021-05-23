@@ -4,7 +4,7 @@ from .daily_bonus import DailyBonus
 import marvelous.data_store as data_store
 from marvelous.models.errors import (
     UserNotFoundError, AlreadyExistError, DataFetchError, DataUpdateError, GitHubUserNotFoundError,
-    GitHubIDTooLongError
+    GitHubIDTooLongError, GitHubNotRegisteredError
 )
 import marvelous.github as github
 from typing import List, Optional
@@ -82,18 +82,17 @@ def reset_marvelous_point() -> None:
         raise DataUpdateError from err
 
 
-def register_github(discord_id: int, github_id: Optional[str]) -> None:
+def register_github(discord_id: int, github_id: str) -> None:
     """ユーザーのGitHub IDを登録する"""
     max_github_id_length = 39
     user: User = get_user(discord_id)
     if user is None:
         raise UserNotFoundError(discord_id)
 
-    if github_id is not None:
-        if len(github_id) > max_github_id_length:
-            raise GitHubIDTooLongError(max_github_id_length, len(github_id))
-        if not github.is_account_exist(github_id):
-            raise GitHubUserNotFoundError(github_id)
+    if len(github_id) > max_github_id_length:
+        raise GitHubIDTooLongError(max_github_id_length, len(github_id))
+    if not github.is_account_exist(github_id):
+        raise GitHubUserNotFoundError(github_id)
 
     user.github_id = github_id
 
@@ -105,4 +104,15 @@ def register_github(discord_id: int, github_id: Optional[str]) -> None:
 
 def unregister_github(discord_id: int) -> None:
     """ユーザーのGitHub IDの登録を解除する"""
-    register_github(discord_id, None)
+    user: User = get_user(discord_id)
+    if user is None:
+        raise UserNotFoundError(discord_id)
+    if user.github_id is None:
+        raise GitHubNotRegisteredError(discord_id)
+
+    user.github_id = None
+
+    try:
+        data_store.users.update(user)
+    except Exception as err:
+        raise DataUpdateError from err
