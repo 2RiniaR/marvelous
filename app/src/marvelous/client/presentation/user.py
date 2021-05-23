@@ -170,6 +170,10 @@ async def unregister_github(user: discord.Member, channel: discord.TextChannel):
 
     try:
         models.unregister_github(user.id)
+    except models.GitHubNotRegisteredError:
+        message = f":no_entry: GitHub IDは登録されていません。"
+        await message_gateway.send(channel, content=message, force=True)
+        return
     except models.ModelError:
         logger.exception("An unknown exception raised while unregistering github id.")
         message = f":no_entry: GitHub IDの登録解除に失敗しました。"
