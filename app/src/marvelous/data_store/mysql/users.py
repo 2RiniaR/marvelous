@@ -117,6 +117,21 @@ def update_user(user: models.User) -> None:
     commit(query, params)
 
 
+def update_marvelous_point_all(users: List[models.User]) -> None:
+    query_cases = "\n    ".join([f"WHEN %(discord_id_{i})s THEN %(marvelous_point_{i})s" for i, _ in enumerate(users)])
+    query_where = f"({','.join([f'%(discord_id_{i})s' for i, _ in enumerate(users)])})"
+    query = (
+        "UPDATE users SET "
+        "marvelous_point = CASE discord_id "
+        f"{query_cases} "
+        f"END WHERE discord_id = {query_where}"
+    )
+    discord_id_params = {f"discord_id_{i}": user.discord_id for i, user in enumerate(users)}
+    marvelous_point_params = {f"marvelous_point_{i}": user.point for i, user in enumerate(users)}
+    params = {**discord_id_params, **marvelous_point_params}
+    commit(query, params)
+
+
 def reset_survival_bonus() -> None:
     query = "UPDATE users SET survival_bonus_given = 0 where TRUE"
     commit(query)
