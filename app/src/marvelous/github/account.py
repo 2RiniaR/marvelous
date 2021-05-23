@@ -18,14 +18,6 @@ def get_request_params(user_id: str) -> Tuple[str, Dict[str, str], Dict[str, str
         "Content-Type": "application/json",
     }
     query = "\n".join([
-        f"query {{",
-        f"    user(login: \"{escape(user_id)}\") {{",
-        f"        id",
-        f"    }}",
-        f"}}",
-    ])
-
-    query = "\n".join([
         "query($user: String!) {",
         "  user(login: $user) { id }",
         "}",
