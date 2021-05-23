@@ -41,7 +41,7 @@ def get_request_params(users_id: List[str], year: int, month: int, day: int) -> 
         fields,
         f"}}",
     ])
-    variables = "{" + "\n".join([f"  \"user_{i}\": \"{escape(user_id)}\"" for i, user_id in enumerate(users_id)]) + "}"
+    variables = "{" + ",\n".join([f"  \"user_{i}\": \"{escape(user_id)}\"" for i, user_id in enumerate(users_id)]) + "}"
     body = {"query": query, "variables": variables}
     return url, headers, body
 
