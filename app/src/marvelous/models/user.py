@@ -80,3 +80,29 @@ def reset_marvelous_point() -> None:
         data_store.users.reset_marvelous_point()
     except Exception as err:
         raise DataUpdateError from err
+
+
+def register_github(discord_id: int, github_id: Optional[str]) -> None:
+    """ユーザーのGitHub IDを登録する"""
+    max_github_id_length = 39
+    user: User = get_user(discord_id)
+    if user is None:
+        raise UserNotFoundError(discord_id)
+
+    if github_id is not None:
+        if len(github_id) > max_github_id_length:
+            raise GitHubIDTooLongError(max_github_id_length, len(github_id))
+        if not github.is_account_exist(github_id):
+            raise GitHubUserNotFoundError(github_id)
+
+    user.github_id = github_id
+
+    try:
+        data_store.users.update(user)
+    except Exception as err:
+        raise DataUpdateError from err
+
+
+def unregister_github(discord_id: int) -> None:
+    """ユーザーのGitHub IDの登録を解除する"""
+    register_github(discord_id, None)
