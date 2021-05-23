@@ -1,12 +1,3 @@
-from . import booing
-from . import daily_bonus
-from . import errors
-from . import marvelous
-from . import reaction
-from . import super_marvelous
-from . import survival_bonus
-from . import user
-
 from .booing import (
     BooingReaction, BooingResult, BooingSettings
 )
@@ -17,7 +8,11 @@ from .daily_bonus import (
 
 from .errors import (
     UserNotFoundError, AlreadyExistError, DataFetchError, DataUpdateError, CalculateError, ModelError,
-    SelfUserReactionError
+    SelfUserReactionError, GitHubUserNotFoundError, GitHubIDTooLongError, GitHubNotRegisteredError
+)
+
+from .github_bonus import (
+    check_github_bonus
 )
 
 from .marvelous import (
@@ -37,5 +32,6 @@ from .survival_bonus import (
 )
 
 from .user import (
-    User, get_user, get_ranking, is_user_exist, register_user, reset_marvelous_point, update_name
+    User, get_user, get_ranking, is_user_exist, register_user, reset_marvelous_point, update_name,
+    register_github, unregister_github
 )

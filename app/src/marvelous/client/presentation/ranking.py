@@ -21,12 +21,14 @@ def get_ranking_message(users: Iterable[models.User]) -> str:
     ])
 
 
-async def show_ranking(channel: discord.TextChannel):
+def get_ranking() -> Iterable[models.User]:
     try:
-        users = models.get_ranking()
-    except models.ModelError as err:
-        logger.error(str(err))
-        return
+        return models.get_ranking()
+    except models.ModelError:
+        logger.exception("An unknown exception raised while getting marvelous point ranking.")
 
+
+async def show_ranking(channel: discord.TextChannel):
+    users = get_ranking()
     message = get_ranking_message(users[:app_settings.message.ranking_limit])
     await message_gateway.send(channel, content=message)

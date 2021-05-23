@@ -17,6 +17,6 @@ def check_reset_daily_steps():
 def run_reset_daily_steps():
     try:
         models.reset_daily_steps()
-    except models.ModelError as err:
-        logger.error(str(err))
+    except models.ModelError:
+        logger.exception("An unknown exception raised while resetting daily bonus steps.")
         return

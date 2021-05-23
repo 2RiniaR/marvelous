@@ -11,5 +11,6 @@ CREATE TABLE users(
     marvelous_bonus_today_step int unsigned,
     booing_penalty_step int unsigned,
     booing_penalty_today_step int unsigned,
-    survival_bonus_given boolean
+    survival_bonus_given boolean,
+    github_id varchar(64)
 );

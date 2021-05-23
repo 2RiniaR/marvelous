@@ -56,6 +56,12 @@ class UserSettings:
 
 
 @dataclass()
+class GitHubSettings:
+    bonus_time: datetime.time
+    bonus_point: int
+
+
+@dataclass()
 class AppSettings:
     marvelous: MarvelousSettings
     super_marvelous: SuperMarvelousSettings
@@ -63,6 +69,7 @@ class AppSettings:
     survival: SurvivalSettings
     message: MessageSettings
     user: UserSettings
+    github: GitHubSettings
 
 
 app_settings = AppSettings(
@@ -108,5 +115,9 @@ app_settings = AppSettings(
         update_name_time=datetime.time(4, 0),
         reset_marvelous_point_time=datetime.time(4, 0),
         reset_marvelous_point_weekday=0
+    ),
+    github=GitHubSettings(
+        bonus_time=datetime.time(0, 1),
+        bonus_point=3
     )
 )

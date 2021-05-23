@@ -136,8 +136,8 @@ async def run_reaction_event(event: ReactionEvent, send: bool):
             models.send_reaction(event.sender.id, event.receiver.id, reaction)
         else:
             models.cancel_reaction(event.sender.id, event.receiver.id, reaction)
-    except models.ModelError as err:
-        logger.error(str(err))
+    except models.ModelError:
+        logger.exception("An unknown exception raised while processing reaction.")
         return
 
     await response(event, send, reaction)

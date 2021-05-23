@@ -7,53 +7,55 @@ from marvelous.settings import app_settings
 WEEKDAY_DISPLAY = ["月", "火", "水", "木", "金", "土", "日"]
 
 logger = getLogger(__name__)
-help_text = (
-    "各ユーザーの 👏えらいポイント を管理するbotです。\n"
-    "\n"
-    f"👏えらいポイント は、毎週{WEEKDAY_DISPLAY[app_settings.user.reset_marvelous_point_weekday]}曜"
-    f"{app_settings.user.reset_marvelous_point_time.strftime('%H:%M')}にリセットされます。\n"
-    "このとき、ポイントを多く集めた人を表彰します。たくさんポイントを集められるようにがんばりましょう！\n"
-    "\n"
-    "他のユーザーのメッセージに以下のリアクションを付けると、アクションが可能です。\n"
-    "```md\n"
-    f"{app_settings.marvelous.reaction} 「えらい！」を送る\n"
-    f"    - 相手に👏{'{:+}'.format(app_settings.marvelous.receive_point)}\n"
-    f"    - 同じメッセージに何個か{app_settings.marvelous.reaction}が付くと...？\n"
-    f"{app_settings.booing.reaction} 「カス！」を送る\n"
-    f"    - 相手に👏{'{:+}'.format(app_settings.booing.receive_point)}\n"
-    f"    - 同じメッセージに何個か{app_settings.booing.reaction}が付くと...？\n"
-    f"{app_settings.super_marvelous.reaction} 「めっちゃえらい！」を送る\n"
-    f"    - 相手に👏{'{:+}'.format(app_settings.super_marvelous.receive_point)}\n"
-    f"    - 自分に👏{'{:+}'.format(app_settings.super_marvelous.send_point)}\n"
-    f"    - 各ユーザー、1週間に{app_settings.super_marvelous.initial_left_count}回まで"
-    f"（毎週{WEEKDAY_DISPLAY[app_settings.super_marvelous.reset_weekday]}曜"
-    f"{app_settings.super_marvelous.reset_time.strftime('%H:%M')}に回数リセット、残り回数は !erai me で確認可能）\n"
-    "```\n"
-    "\n"
-    "その他、以下のアクションによって 👏えらいポイント が変動します。\n"
-    "```md\n"
-    "その日最初のメッセージを送る\n"
-    f"    - 自分に👏{'{:+}'.format(app_settings.survival.point)}\n"
-    f"「えらい！」を{app_settings.marvelous.send_bonus.step_interval}回送る"
-    f"（{app_settings.marvelous.send_bonus.daily_step_limit}カウント/日）\n"
-    f"    - 自分に👏{'{:+}'.format(app_settings.marvelous.send_bonus.point)}\n"
-    f"「カス！」を{app_settings.booing.send_penalty.step_interval}回送る"
-    f"（{app_settings.booing.send_penalty.daily_step_limit}カウント/日）\n"
-    f"    - 自分に👏{'{:+}'.format(app_settings.booing.send_penalty.point)}\n"
-    "```\n"
-    "\n"
-    "【コマンド一覧】\n"
-    "`!erai me`      : 自分のステータスを表示する\n"
-    "`!erai ranking` : えらいポイントのランキングを表示する\n"
-    "`!erai help`    : ヘルプを表示する\n"
-    "\n"
-    "【開発者】\n"
-    "Rinia\n"
-    "【開発ソース】\n"
-    "https://github.com/watano1168/marvelous\n"
-    "【問題点・改善案は、こちらから報告をお願いします】\n"
-    "https://github.com/watano1168/marvelous/issues"
-)
+help_text = f"""
+各ユーザーの 👏えらいポイント を管理するbotです。
+
+👏えらいポイント は、毎週{WEEKDAY_DISPLAY[app_settings.user.reset_marvelous_point_weekday]}曜{app_settings.user.reset_marvelous_point_time.strftime('%H:%M')}にリセットされます。
+このとき、ポイントを多く集めた人を表彰します。たくさんポイントを集められるようにがんばりましょう！
+
+他のユーザーのメッセージに以下のリアクションを付けると、アクションが可能です。
+```md
+{app_settings.marvelous.reaction} 「えらい！」を送る
+    - 相手に👏{'{:+}'.format(app_settings.marvelous.receive_point)}
+    - 同じメッセージに何個か{app_settings.marvelous.reaction}が付くと...？
+{app_settings.booing.reaction} 「カス！」を送る
+    - 相手に👏{'{:+}'.format(app_settings.booing.receive_point)}
+    - 同じメッセージに何個か{app_settings.booing.reaction}が付くと...？
+{app_settings.super_marvelous.reaction} 「めっちゃえらい！」を送る
+    - 相手に👏{'{:+}'.format(app_settings.super_marvelous.receive_point)}
+    - 自分に👏{'{:+}'.format(app_settings.super_marvelous.send_point)}
+    - 各ユーザー、1週間に{app_settings.super_marvelous.initial_left_count}回まで（毎週{WEEKDAY_DISPLAY[app_settings.super_marvelous.reset_weekday]}曜{app_settings.super_marvelous.reset_time.strftime('%H:%M')}に回数リセット、残り回数は !erai me で確認可能）
+```
+
+その他、以下のアクションによって 👏えらいポイント が変動します。
+```md
+その日最初のメッセージを送る
+    - 自分に👏{'{:+}'.format(app_settings.survival.point)}
+「えらい！」を{app_settings.marvelous.send_bonus.step_interval}回送る（{app_settings.marvelous.send_bonus.daily_step_limit}カウント/日）
+    - 自分に👏{'{:+}'.format(app_settings.marvelous.send_bonus.point)}
+「カス！」を{app_settings.booing.send_penalty.step_interval}回送る（{app_settings.booing.send_penalty.daily_step_limit}カウント/日）
+    - 自分に👏{'{:+}'.format(app_settings.booing.send_penalty.point)}
+1日1回以上、GitHubにContributionする
+    - 自分に👏{'{:+}'.format(app_settings.github.bonus_point)} (翌日{app_settings.github.bonus_time}時点で集計)
+    - 使用するためには !erai github register コマンドでGitHub IDを登録する必要があります
+    - 集計時までにContributionとしてカウントされていないと反映されないため、pushやmergeのし忘れに注意！
+```
+
+【コマンド一覧】
+`!erai me`      : 自分のステータスを表示する
+`!erai ranking` : えらいポイントのランキングを表示する
+`!erai help`    : ヘルプを表示する
+
+`!erai github register [GitHub ID]` : GitHub IDを登録する
+`!erai github unregister`           : GitHub IDの登録を解除する
+
+【開発者】
+Rinia
+【開発ソース】
+https://github.com/watano1168/marvelous
+【問題点・改善案は、こちらから報告をお願いします】
+https://github.com/watano1168/marvelous/issues
+"""
 
 
 def get_help_embed() -> discord.Embed:

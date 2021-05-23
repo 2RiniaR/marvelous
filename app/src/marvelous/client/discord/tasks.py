@@ -1,7 +1,5 @@
 from discord.ext import tasks, commands
-from ..presentation import (
-    check_reset_survival_bonus, check_reset_daily_steps, check_reset_super_marvelous_left, check_reset_marvelous_point
-)
+from .. import presentation
 from .reaction import reflect_caches
 
 
@@ -12,10 +10,11 @@ async def every_second():
 
 @tasks.loop(seconds=60)
 async def check_timer():
-    check_reset_daily_steps()
-    check_reset_survival_bonus()
-    check_reset_super_marvelous_left()
-    await check_reset_marvelous_point()
+    presentation.check_reset_daily_steps()
+    presentation.check_reset_survival_bonus()
+    presentation.check_reset_super_marvelous_left()
+    presentation.check_github_bonus()
+    await presentation.check_reset_marvelous_point()
 
 
 def setup(_: commands.Bot):

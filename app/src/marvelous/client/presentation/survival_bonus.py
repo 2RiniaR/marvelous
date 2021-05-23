@@ -41,14 +41,14 @@ async def check_survival_bonus(user: discord.Member, channel: discord.TextChanne
 
     try:
         models.update_name(user.id, user.display_name)
-    except models.ModelError as err:
-        logger.error(str(err))
+    except models.ModelError:
+        logger.exception("An unknown exception raised while updating user name.")
 
     try:
         bonus_given = models.give_survival_bonus(user.id, app_settings.survival.point)
         update_user_cache(user.id)
-    except models.ModelError as err:
-        logger.error(str(err))
+    except models.ModelError:
+        logger.exception("An unknown exception raised while giving survival bonus.")
         return
 
     if bonus_given:
@@ -66,6 +66,6 @@ def run_reset_survival_bonus():
     try:
         models.reset_survival_bonus()
         clear_user_cache()
-    except models.ModelError as err:
-        logger.error(str(err))
+    except models.ModelError:
+        logger.exception("An unknown exception raised while resetting survival bonus.")
         return

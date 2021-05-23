@@ -27,7 +27,7 @@ def give_survival_bonus(discord_id: int, give_point: int) -> bool:
         raise CalculateError from err
 
     try:
-        data_store.users.update_user(user)
+        data_store.users.update(user)
     except Exception as err:
         raise DataUpdateError from err
 

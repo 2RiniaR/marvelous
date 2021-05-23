@@ -1,7 +1,7 @@
 from logging import getLogger
 from discord.ext import commands
 import discord
-from ..presentation import check_survival_bonus
+from .. import presentation
 from .reaction import set_reaction_state
 from .help import show_help_on_mention
 
@@ -17,7 +17,7 @@ async def on_ready():
 @commands.Cog.listener()
 async def on_message(message: discord.Message):
     await show_help_on_mention(message)
-    await check_survival_bonus(message.author, message.channel)
+    await presentation.check_survival_bonus(message.author, message.channel)
 
 
 @commands.Cog.listener()
