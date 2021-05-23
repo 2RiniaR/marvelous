@@ -1,10 +1,6 @@
 import marvelous.models as models
 from typing import Dict, Tuple, List, Optional
 from .execute import fetch_one, fetch_all, commit
-from logging import getLogger
-
-
-logger = getLogger(__name__)
 
 
 def initialize_table() -> None:
@@ -53,7 +49,7 @@ def to_user(data: Tuple[str, str, str, str, str, str, str, str, str]) -> models.
     )
 
 
-def create_user(user: models.User) -> None:
+def create(user: models.User) -> None:
     query = (
         'INSERT INTO users('
         'discord_id, display_name, marvelous_point, super_marvelous_left, marvelous_bonus_step,'
@@ -66,13 +62,13 @@ def create_user(user: models.User) -> None:
     commit(query, params)
 
 
-def delete_user_by_id(discord_id: str) -> None:
+def delete_by_id(discord_id: str) -> None:
     query = "DELETE FROM users WHERE discord_id = %(discord_id)s"
     params = {"discord_id": discord_id}
     commit(query, params)
 
 
-def get_user_by_id(discord_id: int) -> Optional[models.User]:
+def get_by_id(discord_id: int) -> Optional[models.User]:
     query = "SELECT * FROM users WHERE discord_id=%(discord_id)s"
     params = {"discord_id": str(discord_id)}
     data = fetch_one(query, params)
@@ -96,11 +92,11 @@ def get_all_sorted_by_marvelous_point() -> List[models.User]:
     data = fetch_all(query)
     if data is None:
         return []
-    users: Iterable[models.User] = [to_user(row) for row in data]
+    users: List[models.User] = [to_user(row) for row in data]
     return users
 
 
-def update_user(user: models.User) -> None:
+def update(user: models.User) -> None:
     query = (
         "UPDATE users SET "
         "display_name=%(display_name)s,"

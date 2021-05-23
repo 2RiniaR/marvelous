@@ -24,7 +24,7 @@ def is_user_exist(discord_id: int) -> bool:
 def get_user(discord_id: int) -> Optional[User]:
     """ユーザー情報を取得する"""
     try:
-        user: User = data_store.users.get_user_by_id(discord_id)
+        user: User = data_store.users.get_by_id(discord_id)
     except Exception as err:
         raise DataFetchError from err
     return user
@@ -35,7 +35,7 @@ def register_user(user: User):
     if is_user_exist(user.discord_id):
         raise AlreadyExistError(user.discord_id)
     try:
-        data_store.users.create_user(user)
+        data_store.users.create(user)
     except Exception as err:
         raise DataUpdateError from err
 
@@ -47,7 +47,7 @@ def update_name(discord_id: int, name: str) -> None:
         raise UserNotFoundError(discord_id)
     user.display_name = name
     try:
-        data_store.users.update_user(user)
+        data_store.users.update(user)
     except Exception as err:
         raise DataUpdateError from err
 
@@ -55,7 +55,7 @@ def update_name(discord_id: int, name: str) -> None:
 def get_ranking() -> Iterable[User]:
     """ユーザーランキングを取得する"""
     try:
-        users: Iterable[User] = data_store.users.get_users_marvelous_point_ranking()
+        users: List[User] = data_store.users.get_all_sorted_by_marvelous_point()
     except Exception as err:
         raise DataFetchError from err
     return users

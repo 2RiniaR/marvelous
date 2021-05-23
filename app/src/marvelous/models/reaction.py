@@ -39,8 +39,8 @@ def update_reaction(sender_id: int, receiver_id: int, reaction: Reaction, forwar
         raise CalculateError from err
 
     try:
-        data_store.users.update_user(sender)
-        data_store.users.update_user(receiver)
+        data_store.users.update(sender)
+        data_store.users.update(receiver)
     except Exception as err:
         raise DataUpdateError from err
 
