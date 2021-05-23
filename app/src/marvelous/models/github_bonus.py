@@ -27,7 +27,7 @@ def get_requests_id(users: List[User]) -> Tuple[List[str], List[Optional[int]]]:
 def check_bonuses(users: List[User], date: datetime.date) -> List[bool]:
     requests_id, indices = get_requests_id(users)
     try:
-        counts = list(github.get_contribution_count(requests_id, date.year, date.month, date.day))
+        counts = github.get_contribution_count(requests_id, date.year, date.month, date.day)
     except Exception as err:
         raise DataFetchError from err
     return [indices[i] is not None and counts[indices[i]] for i, _ in enumerate(users)]
@@ -39,8 +39,8 @@ def apply_bonus(user: User, give_point: int) -> None:
 
 def check_github_bonus(give_point: int, date: datetime.date) -> None:
     """全ユーザーのGitHub Contributionボーナスをチェックする"""
-    users = list(get_all_users())
-    bonuses = list(check_bonuses(users, date))
+    users = get_all_users()
+    bonuses = check_bonuses(users, date)
 
     for i in range(len(users)):
         if bonuses[i]:
