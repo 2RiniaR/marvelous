@@ -13,6 +13,7 @@ async def check_timer():
     presentation.check_reset_daily_steps()
     presentation.check_reset_survival_bonus()
     presentation.check_reset_super_marvelous_left()
+    presentation.check_github_bonus()
     await presentation.check_reset_marvelous_point()
 
 
