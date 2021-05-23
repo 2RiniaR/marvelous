@@ -35,6 +35,14 @@ def get_user(discord_id: int) -> Optional[User]:
     return user
 
 
+def get_all_users() -> List[User]:
+    try:
+        users: List[User] = data_store.users.get_all()
+    except Exception as err:
+        raise DataFetchError from err
+    return users
+
+
 def register_user(user: User):
     """ユーザーを新規登録する"""
     if is_user_exist(user.discord_id):
