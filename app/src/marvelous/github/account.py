@@ -1,10 +1,10 @@
 import requests
-from marvelous.settings.env import github_bearer_token
+import logging
 from typing import Tuple, Dict
-from logging import getLogger
+import marvelous.settings as settings
 
 
-logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def escape(value: str) -> str:
@@ -14,7 +14,7 @@ def escape(value: str) -> str:
 def get_request_params(user_id: str) -> Tuple[str, Dict[str, str], Dict[str, str]]:
     url = "https://api.github.com/graphql"
     headers = {
-        "Authorization": "bearer " + github_bearer_token,
+        "Authorization": "bearer " + settings.github.token,
         "Content-Type": "application/json",
     }
     query = "\n".join([

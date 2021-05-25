@@ -1,6 +1,6 @@
-import marvelous.settings.env as env
-import marvelous.data_store as data_store
-import marvelous.client.discord as discord
+import marvelous.settings as settings
+import marvelous.db as db
+import marvelous.discord as discord
 import logging
 import asyncio
 
@@ -11,10 +11,10 @@ async def startup_async():
         "||    Marvelous started!!    ||\n"
         "===============================\n"
     ))
-    logging.basicConfig(level=logging.DEBUG if env.run_environment == "development" else logging.WARNING)
-    await data_store.wait_ready()
-    data_store.initialize_tables()
-    await discord.start(env.discord_token)
+    logging.basicConfig(level=logging.DEBUG if settings.environment.is_development else logging.WARNING)
+    await db.wait_ready()
+    db.initialize_tables()
+    await discord.bot.start(settings.discord.token)
 
 
 def startup():

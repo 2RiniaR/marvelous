@@ -1,9 +1,9 @@
-import requests
-from itertools import chain
-from marvelous.settings.env import github_bearer_token
-from typing import Tuple, Dict, Optional, List
-from marvelous.helpers.iterable import first_match
 import datetime
+import requests
+import itertools
+from typing import Tuple, Dict, Optional, List
+import marvelous.helpers as helpers
+import marvelous.settings as settings
 
 
 def escape(value: str) -> str:
@@ -13,7 +13,7 @@ def escape(value: str) -> str:
 def get_request_params(users_id: List[str], year: int, month: int, day: int) -> Tuple[str, Dict[str, str], Dict[str, str]]:
     url = "https://api.github.com/graphql"
     headers = {
-        "Authorization": "bearer " + github_bearer_token,
+        "Authorization": "bearer " + settings.github.token,
         "Content-Type": "application/json",
     }
     from_time = datetime.datetime(year, month, day, 0, 0, 0, 0)
@@ -53,8 +53,8 @@ def interpret_response(res: any, users_id: List[str], year: int, month: int, day
         if user_res is None:
             return None
         weeks_res = user_res["contributionsCollection"]["contributionCalendar"]["weeks"]
-        days_res = list(chain.from_iterable(map(lambda w: w["contributionDays"], weeks_res)))
-        day_res = first_match(days_res, pred=lambda d: str(d["date"]).startswith(date_str))
+        days_res = list(itertools.chain.from_iterable(map(lambda w: w["contributionDays"], weeks_res)))
+        day_res = helpers.first_match(days_res, pred=lambda d: str(d["date"]).startswith(date_str))
         if day_res is None:
             return None
         count: int = int(day_res["contributionCount"])
