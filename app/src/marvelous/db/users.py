@@ -20,7 +20,8 @@ def initialize_table() -> None:
         '    booing_penalty_step int unsigned,'
         '    booing_penalty_today_step int unsigned,'
         '    survival_bonus_given boolean,'
-        '    github_id varchar(64)'
+        '    github_id varchar(64),'
+        '    sleeping boolean'
         ')'
     )
     commit(query)
@@ -37,11 +38,12 @@ def to_parameter(user: models.User) -> Dict[str, str]:
         "booing_penalty_step": str(user.booing_penalty.step),
         "booing_penalty_today_step": str(user.booing_penalty.today),
         "survival_bonus_given": "1" if user.survival_bonus_given else "0",
-        "github_id": str(user.github_id) if user.github_id is not None else None
+        "github_id": str(user.github_id) if user.github_id is not None else None,
+        "sleeping": "1" if user.sleeping else "0"
     }
 
 
-def to_user(data: Tuple[str, str, str, str, str, str, str, str, str, str]) -> models.User:
+def to_user(data: Tuple[str, str, str, str, str, str, str, str, str, str, str]) -> models.User:
     (
         discord_id,
         display_name,
@@ -52,7 +54,8 @@ def to_user(data: Tuple[str, str, str, str, str, str, str, str, str, str]) -> mo
         booing_penalty_step,
         booing_penalty_today_step,
         survival_bonus_given,
-        github_id
+        github_id,
+        sleeping
     ) = data
     return models.User(
         discord_id=int(discord_id),
@@ -62,7 +65,8 @@ def to_user(data: Tuple[str, str, str, str, str, str, str, str, str, str]) -> mo
         marvelous_bonus=models.DailyBonus(step=int(marvelous_bonus_step), today=int(marvelous_bonus_today_step)),
         booing_penalty=models.DailyBonus(step=int(booing_penalty_step), today=int(booing_penalty_today_step)),
         survival_bonus_given=int(survival_bonus_given) == 1,
-        github_id=github_id
+        github_id=github_id,
+        sleeping=int(sleeping) == 1
     )
 
 
@@ -70,10 +74,10 @@ def create(user: models.User) -> None:
     query = (
         'INSERT INTO users('
         'discord_id, display_name, marvelous_point, super_marvelous_left, marvelous_bonus_step,'
-        'marvelous_bonus_today_step, booing_penalty_step, booing_penalty_today_step, survival_bonus_given)'
+        'marvelous_bonus_today_step, booing_penalty_step, booing_penalty_today_step, survival_bonus_given, sleeping)'
         'VALUES (%(discord_id)s, %(display_name)s, %(marvelous_point)s, %(super_marvelous_left)s, '
         '%(marvelous_bonus_step)s, %(marvelous_bonus_today_step)s, %(booing_penalty_step)s, '
-        '%(booing_penalty_today_step)s, %(survival_bonus_given)s)'
+        '%(booing_penalty_today_step)s, %(survival_bonus_given)s, %(sleeping)s)'
     )
     params = to_parameter(user)
     commit(query, params)
@@ -124,7 +128,8 @@ def update(user: models.User) -> None:
         "booing_penalty_step=%(booing_penalty_step)s,"
         "booing_penalty_today_step=%(booing_penalty_today_step)s,"
         "survival_bonus_given=%(survival_bonus_given)s,"
-        "github_id=%(github_id)s "
+        "github_id=%(github_id)s,"
+        "sleeping=%(sleeping)s "
         "WHERE discord_id = %(discord_id)s"
     )
     params = to_parameter(user)

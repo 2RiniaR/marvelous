@@ -13,3 +13,4 @@ class User:
     survival_bonus_given: bool = None
     point: int = None
     github_id: Optional[str] = None
+    sleeping: bool = None
