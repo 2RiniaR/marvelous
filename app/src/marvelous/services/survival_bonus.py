@@ -24,11 +24,7 @@ def give(discord_id: int, give_point: int) -> bool:
     except Exception as err:
         raise models.CalculateError from err
 
-    try:
-        db.users.update(user)
-    except Exception as err:
-        raise models.DataUpdateError from err
-
+    services.user.update(user)
     return True
 
 

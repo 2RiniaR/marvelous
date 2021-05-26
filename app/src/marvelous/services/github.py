@@ -14,11 +14,7 @@ def register(discord_id: int, github_id: str) -> None:
         raise models.GitHubUserNotFoundError(github_id)
 
     user.github_id = github_id
-
-    try:
-        db.users.update(user)
-    except Exception as err:
-        raise models.DataUpdateError from err
+    services.user.update(user)
 
 
 def unregister(discord_id: int) -> None:
@@ -30,8 +26,4 @@ def unregister(discord_id: int) -> None:
         raise models.GitHubNotRegisteredError(discord_id)
 
     user.github_id = None
-
-    try:
-        db.users.update(user)
-    except Exception as err:
-        raise models.DataUpdateError from err
+    services.user.update(user)

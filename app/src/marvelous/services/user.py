@@ -23,6 +23,13 @@ def get_all() -> List[models.User]:
     return users
 
 
+def update(user: models.User) -> None:
+    try:
+        db.users.update(user)
+    except Exception as err:
+        raise models.DataUpdateError from err
+
+
 def register(user: models.User):
     """ユーザーを新規登録する"""
     if is_exist(user.discord_id):
@@ -39,7 +46,4 @@ def update_name(discord_id: int, name: str) -> None:
     if user is None:
         raise models.UserNotFoundError(discord_id)
     user.display_name = name
-    try:
-        db.users.update(user)
-    except Exception as err:
-        raise models.DataUpdateError from err
+    update(user)
