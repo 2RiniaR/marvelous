@@ -1,6 +1,4 @@
-import marvelous.settings as settings
-import marvelous.db as db
-import marvelous.discord as discord
+from marvelous import settings, db, discord
 import logging
 import asyncio
 
@@ -12,9 +10,8 @@ async def startup_async():
         "===============================\n"
     ))
     logging.basicConfig(level=logging.DEBUG if settings.environment.is_development else logging.WARNING)
-    await db.wait_ready()
-    db.initialize_tables()
-    await discord.bot.start(settings.discord.token)
+    await db.initialize()
+    await discord.start(settings.discord.token)
 
 
 def startup():

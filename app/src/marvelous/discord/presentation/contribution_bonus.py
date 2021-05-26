@@ -1,6 +1,4 @@
-import marvelous.settings as settings
-import marvelous.helpers as helpers
-from marvelous.domain import models, services
+from marvelous import settings, helpers, services, models
 import logging
 import datetime
 
@@ -8,18 +6,18 @@ import datetime
 logger = logging.getLogger(__name__)
 
 
-def check_github_bonus():
+def check_give_time():
     reset_time = settings.contribution_bonus.given_time
-    if not helpers.is_now_time(reset_time):
+    if not helpers.time.is_now_time(reset_time):
         return
-    run_github_bonus()
+    give()
 
 
-def run_github_bonus():
+def give():
     try:
         today: datetime.date = (datetime.datetime.now() - datetime.timedelta(days=1)).date()
-        point: int = settings.github.point
-        services.give_contribution_bonus(point, today)
+        point: int = settings.contribution_bonus.point
+        services.contribution_bonus.give(point, today)
     except models.ModelError:
         logger.exception("An unknown exception raised while checking github bonus.")
         return

@@ -1,8 +1,8 @@
 import asyncio
 import discord
 import logging
-import marvelous.settings as settings
-from .instance import client
+from marvelous import settings
+from marvelous.discord import bot
 
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class DiscordMessageGateway:
             logger.warning("Default channel id is invalid. Sending message to default will be canceled.")
             return
 
-        default_channel = client.get_channel(default_channel_id)
+        default_channel = bot.instance.client.get_channel(default_channel_id)
         if default_channel is None:
             logger.warning("Default channel is None. Sending message to default was canceled.")
             return
@@ -56,4 +56,4 @@ class DiscordMessageGateway:
             self.strict = False
 
 
-message_gateway = DiscordMessageGateway()
+sender = DiscordMessageGateway()

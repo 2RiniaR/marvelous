@@ -1,6 +1,4 @@
-from .user import get_by_id as get_user_by_id
-import marvelous.domain.models as models
-import marvelous.db as db
+from marvelous import models, services, db
 
 
 def check_self_user(sender_id: int, receiver_id: int):
@@ -12,8 +10,8 @@ def update(sender_id: int, receiver_id: int, reaction: models.Reaction, forward:
     check_self_user(sender_id, receiver_id)
 
     try:
-        sender = get_user_by_id(sender_id)
-        receiver = get_user_by_id(receiver_id)
+        sender = services.user.get_by_id(sender_id)
+        receiver = services.user.get_by_id(receiver_id)
     except Exception as err:
         raise models.DataFetchError from err
 

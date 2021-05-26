@@ -70,4 +70,4 @@ class ReactionStateCache:
         self.states.clear()
 
 
-reaction_cache = ReactionStateCache()
+memory = ReactionStateCache()

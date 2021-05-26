@@ -1,7 +1,6 @@
-from . import connection
 import mysql.connector
-from .connection import connection
 import logging
+from .connection import connection
 
 
 logger = logging.getLogger(__name__)

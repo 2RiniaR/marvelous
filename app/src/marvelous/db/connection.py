@@ -3,7 +3,7 @@ import asyncio
 from typing import Union, Optional
 import mysql.connector
 import mysql.connector.errorcode
-import marvelous.settings as settings
+from marvelous import settings
 
 
 logger = logging.getLogger(__name__)

@@ -1,6 +1,5 @@
-import marvelous.settings as settings
-from . import instance
-from .help import MarvelousHelpCommand
+from marvelous import settings
+from marvelous.discord import bot
 
 
 INITIAL_EXTENSIONS = [
@@ -14,14 +13,14 @@ if settings.environment.is_development:
 
 async def runner(*args, **kwargs):
     try:
-        await instance.client.start(*args, **kwargs)
+        await bot.instance.client.start(*args, **kwargs)
     finally:
-        if not instance.client.is_closed():
-            await instance.client.close()
+        if not bot.instance.client.is_closed():
+            await bot.instance.client.close()
 
 
 async def start(token: str):
-    instance.client.help_command = MarvelousHelpCommand()
+    bot.instance.client.help_command = bot.help.MarvelousHelpCommand()
     for extension in INITIAL_EXTENSIONS:
-        instance.client.load_extension(extension)
+        bot.instance.client.load_extension(extension)
     await runner(token)

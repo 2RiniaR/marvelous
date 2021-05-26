@@ -1,6 +1,5 @@
 from typing import List, Optional
-import marvelous.domain.models as models
-import marvelous.db as db
+from marvelous import models, db
 
 
 def is_exist(discord_id: int) -> bool:

@@ -1,6 +1,11 @@
-import marvelous.domain.models as models
+from marvelous import models
 from typing import Dict, Tuple, List, Optional
 from .execute import fetch_one, fetch_all, commit
+
+
+def drop_table() -> None:
+    query = 'DROP TABLE IF EXISTS users'
+    commit(query)
 
 
 def initialize_table() -> None:

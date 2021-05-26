@@ -1,10 +1,10 @@
 from discord.ext import commands
 import discord
 import logging
-import marvelous.settings as settings
+from marvelous import settings
+
 
 WEEKDAY_DISPLAY = ["月", "火", "水", "木", "金", "土", "日"]
-
 logger = logging.getLogger(__name__)
 help_text = f"""
 各ユーザーの 👏えらいポイント を管理するbotです。
@@ -57,21 +57,21 @@ https://github.com/watano1168/marvelous/issues
 """
 
 
-def get_help_embed() -> discord.Embed:
+def get_embed() -> discord.Embed:
     return discord.Embed(title="ヘルプ", description=help_text, color=0x00ff00)
 
 
-async def show_help(message: discord.Message):
+async def show(message: discord.Message):
     author: discord.User = message.author
     if author is None:
         return
     try:
-        await author.send(embed=get_help_embed())
+        await author.send(embed=get_embed())
     except discord.Forbidden:
         channel: discord.TextChannel = message.channel
         if channel is None or not isinstance(channel, discord.TextChannel):
             return
-        await channel.send(embed=get_help_embed())
+        await channel.send(embed=get_embed())
     except Exception as err:
         logger.error(str(err))
 
@@ -91,7 +91,7 @@ class MarvelousHelpCommand(commands.DefaultHelpCommand):
         ctx: commands.Context = self.context
         if ctx is None:
             return
-        await show_help(ctx.message)
+        await show(ctx.message)
 
     def command_not_found(self, string):
         return f"{string} というコマンドは存在しません。"

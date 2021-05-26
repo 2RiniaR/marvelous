@@ -1,4 +1,4 @@
-import marvelous.db as db
+from marvelous import db
 
 
 def reset() -> None:

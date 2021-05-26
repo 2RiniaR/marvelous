@@ -1,6 +1,4 @@
-import marvelous.domain.models as models
-import marvelous.db as db
-from .user import get_by_id as get_user_by_id
+from marvelous import models, db, services
 
 
 def apply(user: models.User, give_point: int):
@@ -11,7 +9,7 @@ def apply(user: models.User, give_point: int):
 def give(discord_id: int, give_point: int) -> bool:
     """「生きててえらいボーナス」を付与する"""
     try:
-        user = get_user_by_id(discord_id)
+        user = services.user.get_by_id(discord_id)
     except Exception as err:
         raise models.DataFetchError from err
 

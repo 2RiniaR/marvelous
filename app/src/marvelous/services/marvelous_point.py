@@ -1,6 +1,5 @@
 from typing import List
-import marvelous.db as db
-import marvelous.domain.models as models
+from marvelous import db, models
 
 
 def reset() -> None:

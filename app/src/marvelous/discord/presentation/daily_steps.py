@@ -1,22 +1,20 @@
-import marvelous.settings as settings
-import marvelous.helpers as helpers
-from marvelous.domain import models, services
+from marvelous import settings, helpers, services, models
 import logging
 
 
 logger = logging.getLogger(__name__)
 
 
-def check_reset_daily_steps():
+def check_reset_time():
     reset_time = settings.marvelous.send_bonus.reset_time
-    if not helpers.is_now_time(reset_time):
+    if not helpers.time.is_now_time(reset_time):
         return
-    run_reset_daily_steps()
+    reset()
 
 
-def run_reset_daily_steps():
+def reset():
     try:
-        services.reset_daily_bonus()
+        services.daily_bonus.reset()
     except models.ModelError:
         logger.exception("An unknown exception raised while resetting daily bonus steps.")
         return

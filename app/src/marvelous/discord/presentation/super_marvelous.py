@@ -1,23 +1,21 @@
-import marvelous.settings as settings
-import marvelous.helpers as helpers
-from marvelous.domain import models, services
+from marvelous import services, models, helpers, settings
 import logging
 
 
 logger = logging.getLogger(__name__)
 
 
-def check_reset_super_marvelous_left():
+def check_reset_time():
     reset_time = settings.super_marvelous.reset_time
     reset_weekday = settings.super_marvelous.reset_weekday
-    if not (helpers.is_now_time(reset_time) and helpers.is_now_weekday(reset_weekday)):
+    if not (helpers.time.is_now_time(reset_time) and helpers.time.is_now_weekday(reset_weekday)):
         return
-    run_reset_super_marvelous_left()
+    reset()
 
 
-def run_reset_super_marvelous_left():
+def reset():
     try:
-        services.reset_super_marvelous_left_count(settings.super_marvelous.initial_left_count)
+        services.super_marvelous.reset_left_count(settings.super_marvelous.initial_left_count)
     except models.ModelError:
         logger.error("An unknown exception raised while resetting super marvelous left count.")
         return

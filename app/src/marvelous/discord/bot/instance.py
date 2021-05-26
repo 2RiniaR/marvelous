@@ -1,6 +1,6 @@
-import discord.ext.commands as commands
-import marvelous.settings as settings
 import discord
+from discord.ext import commands
+from marvelous import settings
 
 
 client: commands.Bot = commands.Bot(

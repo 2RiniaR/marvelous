@@ -1,10 +1,7 @@
 import datetime
 import logging
 from typing import Optional, List, Tuple
-import marvelous.github as github
-import marvelous.domain.models as models
-import marvelous.db as db
-from .user import get_all as get_all_users
+from marvelous import github, models, db, services
 
 
 logger = logging.getLogger(__name__)
@@ -27,7 +24,7 @@ def get_requests_id(users: List[models.User]) -> Tuple[List[str], List[Optional[
 def check(users: List[models.User], date: datetime.date) -> List[bool]:
     requests_id, indices = get_requests_id(users)
     try:
-        counts = github.get_contribution_count(requests_id, date.year, date.month, date.day)
+        counts = github.contribution.get_count(requests_id, date.year, date.month, date.day)
     except Exception as err:
         raise models.DataFetchError from err
     return [indices[i] is not None and counts[indices[i]] for i, _ in enumerate(users)]
@@ -39,7 +36,7 @@ def apply(user: models.User, give_point: int) -> None:
 
 def give(give_point: int, date: datetime.date) -> None:
     """全ユーザーのGitHub Contributionボーナスをチェックする"""
-    users = get_all_users()
+    users = services.user.get_all()
     bonuses = check(users, date)
 
     for i in range(len(users)):

@@ -1,5 +1,4 @@
-import marvelous.db as db
-import marvelous.domain.models as models
+from marvelous import db, models
 
 
 def reset_left_count(count: int) -> None:

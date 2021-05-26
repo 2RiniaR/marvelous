@@ -1,6 +1,6 @@
 import logging
-import discord.ext.commands as commands
 import discord
+from discord.ext import commands
 from marvelous.discord import presentation
 
 
@@ -14,18 +14,18 @@ async def on_ready():
 
 @commands.Cog.listener()
 async def on_message(message: discord.Message):
-    await presentation.show_help_on_mention(message)
-    await presentation.check_survival_bonus(message.author, message.channel)
+    await presentation.help.show_on_mention(message)
+    await presentation.survival_bonus.check_give(message.author, message.channel)
 
 
 @commands.Cog.listener()
 async def on_raw_reaction_add(payload: discord.RawReactionActionEvent):
-    presentation.set_reaction_state(payload, True)
+    presentation.reaction.set_state(payload, True)
 
 
 @commands.Cog.listener()
 async def on_raw_reaction_remove(payload: discord.RawReactionActionEvent):
-    presentation.set_reaction_state(payload, False)
+    presentation.reaction.set_state(payload, False)
 
 
 def setup(bot: commands.Bot):

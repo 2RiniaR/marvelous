@@ -2,8 +2,7 @@ import datetime
 import requests
 import itertools
 from typing import Tuple, Dict, Optional, List
-import marvelous.helpers as helpers
-import marvelous.settings as settings
+from marvelous import helpers, settings
 
 
 def escape(value: str) -> str:
@@ -54,7 +53,7 @@ def interpret_response(res: any, users_id: List[str], year: int, month: int, day
             return None
         weeks_res = user_res["contributionsCollection"]["contributionCalendar"]["weeks"]
         days_res = list(itertools.chain.from_iterable(map(lambda w: w["contributionDays"], weeks_res)))
-        day_res = helpers.first_match(days_res, pred=lambda d: str(d["date"]).startswith(date_str))
+        day_res = helpers.iterable.first_match(days_res, pred=lambda d: str(d["date"]).startswith(date_str))
         if day_res is None:
             return None
         count: int = int(day_res["contributionCount"])
@@ -69,7 +68,7 @@ def interpret_response(res: any, users_id: List[str], year: int, month: int, day
         raise ValueError("Data structure isn't correct.") from err
 
 
-def get_contribution_count(users_id: List[str], year: int, month: int, day: int) -> List[Optional[int]]:
+def get_count(users_id: List[str], year: int, month: int, day: int) -> List[Optional[int]]:
     url, headers, query = get_request_params(users_id, year, month, day)
     response = requests.post(url, json=query, headers=headers)
     if response.status_code != 200:

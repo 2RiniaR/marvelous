@@ -43,4 +43,4 @@ class UserCache:
         logger.debug("Cache cleared.")
 
 
-user_cache = UserCache()
+memory = UserCache()

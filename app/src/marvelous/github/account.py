@@ -1,7 +1,7 @@
 import requests
 import logging
 from typing import Tuple, Dict
-import marvelous.settings as settings
+from marvelous import settings
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ def interpret_response(res: any) -> bool:
         raise ValueError("Data structure isn't correct.") from err
 
 
-def is_account_exist(user_id: str) -> bool:
+def is_exist(user_id: str) -> bool:
     url, headers, query = get_request_params(user_id)
     response = requests.post(url, json=query, headers=headers)
     if response.status_code != 200:
