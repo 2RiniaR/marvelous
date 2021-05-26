@@ -1,10 +1,10 @@
 import requests
-from marvelous.settings.env import github_bearer_token
+import logging
 from typing import Tuple, Dict
-from logging import getLogger
+from marvelous import settings
 
 
-logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def escape(value: str) -> str:
@@ -14,7 +14,7 @@ def escape(value: str) -> str:
 def get_request_params(user_id: str) -> Tuple[str, Dict[str, str], Dict[str, str]]:
     url = "https://api.github.com/graphql"
     headers = {
-        "Authorization": "bearer " + github_bearer_token,
+        "Authorization": "bearer " + settings.github.token,
         "Content-Type": "application/json",
     }
     query = "\n".join([
@@ -38,7 +38,7 @@ def interpret_response(res: any) -> bool:
         raise ValueError("Data structure isn't correct.") from err
 
 
-def is_account_exist(user_id: str) -> bool:
+def is_exist(user_id: str) -> bool:
     url, headers, query = get_request_params(user_id)
     response = requests.post(url, json=query, headers=headers)
     if response.status_code != 200:

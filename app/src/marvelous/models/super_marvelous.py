@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from .user import User
 from .reaction import Reaction
-from .errors import DataUpdateError
-import marvelous.data_store as data_store
 
 
 @dataclass()
@@ -25,8 +23,12 @@ class SuperMarvelousReaction(Reaction):
     def __init__(self, settings: SuperMarvelousSettings):
         self.settings = settings
 
+    @staticmethod
+    def left_count_is_enough(user: User) -> bool:
+        return user.super_marvelous_left > 0
+
     def send(self, sender: User, receiver: User):
-        if not left_count_is_enough(sender):
+        if not self.left_count_is_enough(sender):
             sender.super_marvelous_left -= 1
             self.result = SuperMarvelousResult(no_left_count=True, sender_point_diff=0, receiver_point_diff=0)
             return
@@ -42,7 +44,7 @@ class SuperMarvelousReaction(Reaction):
 
     def cancel(self, sender: User, receiver: User):
         sender.super_marvelous_left += 1
-        if not left_count_is_enough(sender):
+        if not self.left_count_is_enough(sender):
             self.result = SuperMarvelousResult(no_left_count=True, sender_point_diff=0, receiver_point_diff=0)
             return
 
@@ -53,15 +55,3 @@ class SuperMarvelousReaction(Reaction):
             sender_point_diff=-self.settings.sender_point,
             receiver_point_diff=-self.settings.receiver_point
         )
-
-
-def left_count_is_enough(user: User) -> bool:
-    return user.super_marvelous_left > 0
-
-
-def reset_super_marvelous_left(count: int) -> None:
-    """「めっちゃえらい」の残り使用可能回数をリセットする"""
-    try:
-        data_store.users.reset_super_marvelous_left(count)
-    except Exception as err:
-        raise DataUpdateError from err
