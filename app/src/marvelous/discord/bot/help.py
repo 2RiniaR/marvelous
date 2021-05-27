@@ -2,6 +2,7 @@ from discord.ext import commands
 import discord
 import logging
 from marvelous import settings
+from marvelous.discord import bot
 
 
 WEEKDAY_DISPLAY = ["月", "火", "水", "木", "金", "土", "日"]
@@ -61,17 +62,18 @@ def get_embed() -> discord.Embed:
     return discord.Embed(title="ヘルプ", description=help_text, color=0x00ff00)
 
 
-async def show(message: discord.Message):
+def show(message: discord.Message):
     author: discord.User = message.author
     if author is None:
         return
+    embed = get_embed()
     try:
-        await author.send(embed=get_embed())
+        bot.message.sender.send(message.author, embed=embed, force=True)
     except discord.Forbidden:
         channel: discord.TextChannel = message.channel
         if channel is None or not isinstance(channel, discord.TextChannel):
             return
-        await channel.send(embed=get_embed())
+        bot.message.sender.send(channel, embed=embed, force=True)
     except Exception as err:
         logger.error(str(err))
 
@@ -91,7 +93,7 @@ class MarvelousHelpCommand(commands.DefaultHelpCommand):
         ctx: commands.Context = self.context
         if ctx is None:
             return
-        await show(ctx.message)
+        show(ctx.message)
 
     def command_not_found(self, string):
         return f"{string} というコマンドは存在しません。"

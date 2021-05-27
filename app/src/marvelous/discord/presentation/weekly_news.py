@@ -31,8 +31,8 @@ def get_message(users: List[models.User]) -> str:
     )
 
 
-async def send_message():
+def send_message():
     users = presentation.ranking.get_users()
     message = get_message(list(users))
     embed = discord.Embed(title="今週のえらい", description=message, color=0xe8b77b)
-    await bot.message.sender.send_to_default_channel(embed=embed, force=True)
+    bot.message.sender.send_to_default_channel(embed=embed, force=True)

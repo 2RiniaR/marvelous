@@ -1,5 +1,5 @@
 from discord.ext import commands
-from marvelous.discord import presentation
+from marvelous.discord import presentation, bot
 
 
 @commands.command()
@@ -15,17 +15,17 @@ async def ranking(ctx: commands.Context):
 @commands.group()
 async def github(ctx: commands.Context):
     if ctx.invoked_subcommand is None:
-        await ctx.send('このコマンドにはサブコマンドが必要です。')
+        bot.message.sender.send(ctx.channel, "このコマンドにはサブコマンドが必要です。", force=True)
 
 
 @github.command(name="register")
 async def register_github(ctx: commands.Context, github_id: str):
-    await presentation.user.register_github(ctx.author, ctx.channel, github_id)
+    presentation.user.register_github(ctx.author, ctx.channel, github_id)
 
 
 @github.command(name="unregister")
 async def unregister_github(ctx: commands.Context):
-    await presentation.user.unregister_github(ctx.author, ctx.channel)
+    presentation.user.unregister_github(ctx.author, ctx.channel)
 
 
 def setup(bot: commands.Bot):

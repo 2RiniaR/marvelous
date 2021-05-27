@@ -27,7 +27,7 @@ def get_users() -> Iterable[models.User]:
         logger.exception("An unknown exception raised while getting marvelous point ranking.")
 
 
-async def show(channel: discord.TextChannel):
+def show(channel: discord.TextChannel):
     users = get_users()
     message = get_message(users[:settings.message.ranking_limit])
-    await bot.message.sender.send(channel, content=message)
+    bot.message.sender.send(channel, content=message)

@@ -1,35 +1,35 @@
 from discord.ext import commands
-from marvelous.discord import presentation
+from marvelous.discord import presentation, bot
 
 
 @commands.command()
 async def reset_survival_bonus(ctx: commands.Context):
     presentation.survival_bonus.reset()
-    await ctx.channel.send("[DEBUG RUN] Reset survival bonus")
+    bot.message.sender.send(ctx.channel, "[DEBUG RUN] Reset survival bonus", force=True)
 
 
 @commands.command()
 async def reset_super_marvelous_left(ctx: commands.Context):
     presentation.super_marvelous.reset()
-    await ctx.channel.send("[DEBUG RUN] Reset super marvelous left")
+    bot.message.sender.send(ctx.channel, "[DEBUG RUN] Reset super marvelous left", force=True)
 
 
 @commands.command()
 async def reset_daily_steps(ctx: commands.Context):
     presentation.daily_steps.reset()
-    await ctx.channel.send("[DEBUG RUN] Reset daily steps")
+    bot.message.sender.send(ctx.channel, "[DEBUG RUN] Reset daily steps", force=True)
 
 
 @commands.command()
 async def reset_marvelous_point(ctx: commands.Context):
-    await presentation.marvelous_point.reset()
-    await ctx.channel.send("[DEBUG RUN] Reset marvelous point")
+    presentation.marvelous_point.reset()
+    bot.message.sender.send(ctx.channel, "[DEBUG RUN] Reset marvelous point", force=True)
 
 
 @commands.command()
 async def check_contribution_bonus(ctx: commands.Context):
     presentation.contribution_bonus.give()
-    await ctx.channel.send("[DEBUG RUN] Check GitHub bonus")
+    bot.message.sender.send(ctx.channel, "[DEBUG RUN] Check GitHub bonus", force=True)
 
 
 def setup(bot: commands.Bot):

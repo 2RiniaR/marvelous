@@ -8,9 +8,9 @@ from marvelous.discord import presentation, cache, bot
 logger = logging.getLogger(__name__)
 
 
-async def praise(user: discord.Member, channel: discord.TextChannel):
+def praise(user: discord.Member, channel: discord.TextChannel):
     message = helpers.phrase.get_random_phrase(settings.message.phrases.praise_survival, user.display_name)
-    await bot.message.sender.send(channel, content=message, force=True)
+    bot.message.sender.send(channel, content=message, force=True)
 
 
 def is_given(user_id: int) -> bool:
@@ -25,11 +25,11 @@ def is_event_available(user: discord.Member) -> bool:
     return not user.bot
 
 
-async def check_give(user: discord.Member, channel: discord.TextChannel):
+def check_give(user: discord.Member, channel: discord.TextChannel):
     if not is_event_available(user):
         return
 
-    await presentation.user.register_if_not_exist(user)
+    presentation.user.register_if_not_exist(user)
 
     if is_given(user.id):
         return
@@ -47,7 +47,7 @@ async def check_give(user: discord.Member, channel: discord.TextChannel):
         return
 
     if bonus_given:
-        await praise(user, channel)
+        praise(user, channel)
 
 
 def check_reset_time():

@@ -67,8 +67,8 @@ def get_status_message(user: models.User) -> str:
     ])
 
 
-async def show_status(user: discord.Member, channel: discord.TextChannel):
-    await register_if_not_exist(user)
+def show_status(user: discord.Member, channel: discord.TextChannel):
+    register_if_not_exist(user)
 
     try:
         result_user = services.user.get_by_id(user.id)
@@ -77,10 +77,10 @@ async def show_status(user: discord.Member, channel: discord.TextChannel):
         return
 
     message = get_status_message(result_user)
-    await bot.message.sender.send(channel, content=message)
+    bot.message.sender.send(channel, content=message)
 
 
-async def register_if_not_exist(author: discord.Member):
+def register_if_not_exist(author: discord.Member):
     if is_exist(author.id):
         return
     try:
@@ -91,43 +91,43 @@ async def register_if_not_exist(author: discord.Member):
         logger.exception("An unknown exception raised while registering user.")
 
 
-async def register_github(user: discord.Member, channel: discord.TextChannel, github_id: str):
-    await register_if_not_exist(user)
+def register_github(user: discord.Member, channel: discord.TextChannel, github_id: str):
+    register_if_not_exist(user)
 
     try:
         services.github.register(user.id, github_id)
     except models.GitHubIDTooLongError as err:
         message = f":no_entry: GitHub IDが長すぎます。{err.max_length}文字以下の文字列を指定してください。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
     except models.GitHubUserNotFoundError as err:
         message = f":no_entry: GitHub ID({err.user_id})が存在しません。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
     except models.ModelError:
         logger.exception("An unknown exception raised while registering github id.")
         message = f":no_entry: GitHub ID({github_id})の登録に失敗しました。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
 
     message = f":white_check_mark: GitHub ID({github_id})を更新しました。"
-    await bot.message.sender.send(channel, content=message, force=True)
+    bot.message.sender.send(channel, content=message, force=True)
 
 
-async def unregister_github(user: discord.Member, channel: discord.TextChannel):
-    await register_if_not_exist(user)
+def unregister_github(user: discord.Member, channel: discord.TextChannel):
+    register_if_not_exist(user)
 
     try:
         services.github.unregister(user.id)
     except models.GitHubNotRegisteredError:
         message = f":no_entry: GitHub IDは登録されていません。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
     except models.ModelError:
         logger.exception("An unknown exception raised while unregistering github id.")
         message = f":no_entry: GitHub IDの登録解除に失敗しました。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
 
     message = f":white_check_mark: GitHub IDの登録を解除しました。"
-    await bot.message.sender.send(channel, content=message)
+    bot.message.sender.send(channel, content=message)
