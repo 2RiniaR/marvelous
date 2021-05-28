@@ -1,6 +1,7 @@
 from marvelous import settings, helpers, services, models
 import logging
 import datetime
+from marvelous import clock
 
 
 logger = logging.getLogger(__name__)
@@ -8,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 def check_give_time():
     reset_time = settings.contribution_bonus.given_time
-    if not helpers.time.is_now_time(reset_time):
+    if not clock.is_now_time(reset_time):
         return
     give()
 

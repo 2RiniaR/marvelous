@@ -1,7 +1,7 @@
 import discord
 import logging
 from typing import Optional
-from marvelous import settings, helpers, services, models
+from marvelous import settings, helpers, services, models, clock
 from marvelous.discord import presentation, cache, bot
 
 
@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 def praise(user: discord.Member, channel: discord.TextChannel):
-    message = helpers.phrase.get_random_phrase(settings.message.phrases.praise_survival, user.display_name)
+    message = helpers.phrase.get_random_phrase(settings.message.phrases.on_make_sure_survival, user.display_name)
+    message += f"  `👏{'{:+}'.format(settings.survival_bonus.point)}`"
     bot.message.sender.send(channel, content=message, force=True)
 
 
@@ -52,7 +53,7 @@ def check_give(user: discord.Member, channel: discord.TextChannel):
 
 def check_reset_time():
     reset_time = settings.survival_bonus.reset_time
-    if not helpers.time.is_now_time(reset_time):
+    if not clock.is_now_time(reset_time):
         return
     reset()
 
