@@ -28,11 +28,8 @@ def update(sender_id: int, receiver_id: int, reaction: models.Reaction, forward:
     except Exception as err:
         raise models.CalculateError from err
 
-    try:
-        db.users.update(sender)
-        db.users.update(receiver)
-    except Exception as err:
-        raise models.DataUpdateError from err
+    services.user.update(sender)
+    services.user.update(receiver)
 
 
 def send(sender_id: int, receiver_id: int, reaction: models.Reaction):

@@ -1,21 +1,21 @@
 import logging
-from marvelous import helpers, settings, services, models
+from marvelous import settings, services, models, clock
 from marvelous.discord import presentation
 
 
 logger = logging.getLogger(__name__)
 
 
-async def check_reset_time():
+def check_reset_time():
     reset_time = settings.user.reset_marvelous_point_time
     reset_weekday = settings.user.reset_marvelous_point_weekday
-    if not (helpers.time.is_now_time(reset_time) and helpers.time.is_now_weekday(reset_weekday)):
+    if not (clock.is_now_time(reset_time) and clock.is_now_weekday(reset_weekday)):
         return
-    await reset()
+    reset()
 
 
-async def reset():
-    await presentation.weekly_news.send_message()
+def reset():
+    presentation.weekly_news.send_message()
     try:
         services.marvelous_point.reset()
     except models.ModelError:

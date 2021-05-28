@@ -38,6 +38,10 @@ from .network import (
     NetworkSettings, values as network
 )
 
+from .sleeping_bonus import (
+    SleepingBonusSettings, values as sleeping_bonus
+)
+
 from .super_marvelous import (
     SuperMarvelousSettings, values as super_marvelous
 )

@@ -50,12 +50,11 @@
 
 
 
-#### 【未実装】整った生活リズム
+#### 整った生活リズム
 
 | アクション                                                   |          |
 | ------------------------------------------------------------ | -------- |
-| `20:00`\*  - `2:00`\* の間に、「`おやすみ`\* 」とメッセージを送信する | `3 pt`\* |
-| `6:00`\*  - `12:00`\* の間に、「`おはよう`\* 」とメッセージを送信する | `3 pt`\* |
+| `18:00`\* - `1:00`\* の間に、「`おやすみ`\* 」とメッセージを送信する　かつ、<br />`1:00`* - `5:00`* の間、メッセージの送信がない　かつ、<br />`5:00`* - `12:00`* の間に、メッセージを1回以上送信する | `5 pt`\* |
 
 
 
@@ -63,7 +62,7 @@
 
 | アクション                                                   | ポイント |
 | ------------------------------------------------------------ | -------- |
-| その日最初のContributionを行う<br />毎日`0:00`\* に集計される | `3 pt`\* |
+| その日の間に1回以上Contributionを行う<br />毎日`0:00`\* に集計される | `3 pt`\* |
 
 
 
@@ -90,6 +89,14 @@
 #### えらいポイントのランキングを表示する
 
 `!erai ranking`
+
+#### GitHubのIDを登録する
+
+`!erai github register [id]`
+
+#### GitHubのID登録を解除する
+
+`!erai github unregister`
 
 
 
@@ -129,14 +136,15 @@
 
 ## 環境変数
 
-| キー            | 説明                                                         | 例                       |
-| --------------- | ------------------------------------------------------------ | ------------------------ |
-| DISCORD_TOKEN   | discord botのトークン                                        |                          |
-| MYSQL_HOST      | MySQLのホスト名                                              | `marvelous_mysql`        |
-| MYSQL_PORT      | MySQLのポート                                                | `3306`                   |
-| MYSQL_DATABASE  | MySQLのデータベース名                                        | `marvelous`              |
-| MYSQL_USER      | MySQLのユーザー名                                            | `user`                   |
-| MYSQL_PASSWORD  | MySQLのパスワード                                            | `password`               |
-| RUN_ENVIRONMENT | `development` が指定されていると、デバッグ用コマンドが実行可能になり、デバッグレベルのログが出力されるようになる | `development`            |
-| HTTP_PROXY      | discord botサーバーが参照するプロキシサーバーのアドレス      | `http://hoge.proxy:port` |
+| キー                | 説明                                                         | 例                       |
+| ------------------- | ------------------------------------------------------------ | ------------------------ |
+| DISCORD_TOKEN       | discord botのトークン                                        |                          |
+| GITHUB_BEARER_TOKEN | GitHubのBearerトークン                                       |                          |
+| MYSQL_HOST          | MySQLのホスト名                                              | `marvelous_mysql`        |
+| MYSQL_PORT          | MySQLのポート                                                | `3306`                   |
+| MYSQL_DATABASE      | MySQLのデータベース名                                        | `marvelous`              |
+| MYSQL_USER          | MySQLのユーザー名                                            | `user`                   |
+| MYSQL_PASSWORD      | MySQLのパスワード                                            | `password`               |
+| RUN_ENVIRONMENT     | `development` が指定されていると、デバッグ用コマンドが実行可能になり、デバッグレベルのログが出力されるようになる | `development`            |
+| HTTP_PROXY          | discord botサーバーが参照するプロキシサーバーのアドレス      | `http://hoge.proxy:port` |
 

@@ -13,7 +13,7 @@ async def check_timer():
     presentation.survival_bonus.check_reset_time()
     presentation.super_marvelous.check_reset_time()
     presentation.contribution_bonus.check_give_time()
-    await presentation.marvelous_point.check_reset_time()
+    presentation.marvelous_point.check_reset_time()
 
 
 def setup(_: commands.Bot):

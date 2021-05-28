@@ -78,49 +78,49 @@ def is_event_available(event: ReactionEvent) -> bool:
     )
 
 
-async def response_to_marvelous(event: ReactionEvent):
+def response_to_marvelous(event: ReactionEvent):
     if event.reaction is None:
         return
     if settings.marvelous.random_message_count == event.reaction.count:
-        message = helpers.phrase.get_random_phrase(settings.message.phrases.praise_something, event.receiver.display_name)
-        await bot.message.sender.send(event.channel, content=message)
+        message = helpers.phrase.get_random_phrase(settings.message.phrases.on_receive_many_marvelous, event.receiver.display_name)
+        bot.message.sender.send(event.channel, content=message)
 
 
-async def response_to_booing(event: ReactionEvent):
+def response_to_booing(event: ReactionEvent):
     if event.reaction is None:
         return
     if settings.marvelous.random_message_count == event.reaction.count:
-        message = helpers.phrase.get_random_phrase(settings.message.phrases.comfort, event.receiver.display_name)
-        await bot.message.sender.send(event.channel, content=message)
+        message = helpers.phrase.get_random_phrase(settings.message.phrases.on_receive_many_booing, event.receiver.display_name)
+        bot.message.sender.send(event.channel, content=message)
 
 
-async def response_to_super_marvelous(event: ReactionEvent, reaction: models.SuperMarvelousReaction):
+def response_to_super_marvelous(event: ReactionEvent, reaction: models.SuperMarvelousReaction):
     if reaction.result.no_left_count:
         message = f":no_entry: {event.sender.display_name}    <<<    「めっちゃえらい！」の残り使用回数が0です"
     else:
         message = (
             f"{':raised_hands: '}**【{str(event.receiver.display_name)}】**{' :raised_hands:'}"
             f"    *by {event.sender.display_name}*"
-            f"\n{helpers.phrase.get_random_phrase(settings.message.phrases.praise_something, event.receiver.display_name)}"
+            f"\n{helpers.phrase.get_random_phrase(settings.message.phrases.on_receive_super_marvelous, event.receiver.display_name)}"
         )
-    await bot.message.sender.send(event.channel, content=message)
+    bot.message.sender.send(event.channel, content=message)
 
 
-async def response_to_reaction(event: ReactionEvent, send: bool, reaction: models.Reaction):
+def response_to_reaction(event: ReactionEvent, send: bool, reaction: models.Reaction):
     if send and isinstance(reaction, models.MarvelousReaction):
-        await response_to_marvelous(event)
+        response_to_marvelous(event)
     elif send and isinstance(reaction, models.BooingReaction):
-        await response_to_booing(event)
+        response_to_booing(event)
     elif send and isinstance(reaction, models.SuperMarvelousReaction):
-        await response_to_super_marvelous(event, reaction)
+        response_to_super_marvelous(event, reaction)
 
 
-async def run_event(event: ReactionEvent, send: bool):
+def run_event(event: ReactionEvent, send: bool):
     if not is_event_available(event):
         return
 
-    await presentation.user.register_if_not_exist(event.sender)
-    await presentation.user.register_if_not_exist(event.receiver)
+    presentation.user.register_if_not_exist(event.sender)
+    presentation.user.register_if_not_exist(event.receiver)
 
     reaction_type = get_reaction_type(event.emoji)
     reaction = get_reaction_model(reaction_type)
@@ -136,15 +136,15 @@ async def run_event(event: ReactionEvent, send: bool):
         logger.exception("An unknown exception raised while processing reaction.")
         return
 
-    await response_to_reaction(event, send, reaction)
+    response_to_reaction(event, send, reaction)
 
 
-async def add(event: ReactionEvent):
-    await run_event(event, send=True)
+def add(event: ReactionEvent):
+    run_event(event, send=True)
 
 
-async def remove(event: ReactionEvent):
-    await run_event(event, send=False)
+def remove(event: ReactionEvent):
+    run_event(event, send=False)
 
 
 async def __fetch_event(ctx: cache.reaction.ReactionContext) -> Optional[ReactionEvent]:
@@ -185,9 +185,9 @@ async def __reflect_state(state: cache.reaction.ReactionState):
         return
 
     if state.current_state:
-        await add(event)
+        add(event)
     else:
-        await remove(event)
+        remove(event)
 
 
 async def reflect_caches():

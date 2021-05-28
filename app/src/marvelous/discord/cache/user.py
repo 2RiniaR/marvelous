@@ -1,18 +1,19 @@
 from typing import Dict, Optional
-import dataclasses
+from dataclasses import dataclass
 import logging
 
 
 logger = logging.getLogger(__name__)
 
 
-@dataclasses.dataclass()
+@dataclass
 class UserContext:
     registered: bool
-    survival_bonus_given: bool
+    survival_bonus_given: bool = False
+    sleeping: bool = False
 
 
-@dataclasses.dataclass()
+@dataclass
 class UserCacheState:
     context: UserContext
 

@@ -31,9 +31,13 @@ def is_exist(user_id: int) -> bool:
 def update_cache(user_id: int) -> cache.user.UserContext:
     user = services.user.get_by_id(user_id)
     if user is None:
-        state = cache.user.UserContext(registered=False, survival_bonus_given=False)
+        state = cache.user.UserContext(registered=False)
     else:
-        state = cache.user.UserContext(registered=True, survival_bonus_given=user.survival_bonus_given)
+        state = cache.user.UserContext(
+            registered=True,
+            survival_bonus_given=user.survival_bonus_given,
+            sleeping=user.slept_at is not None
+        )
     cache.user.memory.set_state(user_id, state)
     return state
 
@@ -50,7 +54,7 @@ def get_status_message(user: models.User) -> str:
     return "\n".join([
         f"```",
         f"【{user.display_name}】",
-        "累計 👏" + str(user.point),
+        "累計 " + settings.message.marvelous_point_symbol + str(user.point),
         f"使用可能 {settings.super_marvelous.reaction}" + str(max(0, user.super_marvelous_left)),
         f"",
         (
@@ -67,8 +71,8 @@ def get_status_message(user: models.User) -> str:
     ])
 
 
-async def show_status(user: discord.Member, channel: discord.TextChannel):
-    await register_if_not_exist(user)
+def show_status(user: discord.Member, channel: discord.TextChannel):
+    register_if_not_exist(user)
 
     try:
         result_user = services.user.get_by_id(user.id)
@@ -77,10 +81,10 @@ async def show_status(user: discord.Member, channel: discord.TextChannel):
         return
 
     message = get_status_message(result_user)
-    await bot.message.sender.send(channel, content=message)
+    bot.message.sender.send(channel, content=message)
 
 
-async def register_if_not_exist(author: discord.Member):
+def register_if_not_exist(author: discord.Member):
     if is_exist(author.id):
         return
     try:
@@ -91,43 +95,43 @@ async def register_if_not_exist(author: discord.Member):
         logger.exception("An unknown exception raised while registering user.")
 
 
-async def register_github(user: discord.Member, channel: discord.TextChannel, github_id: str):
-    await register_if_not_exist(user)
+def register_github(user: discord.Member, channel: discord.TextChannel, github_id: str):
+    register_if_not_exist(user)
 
     try:
         services.github.register(user.id, github_id)
     except models.GitHubIDTooLongError as err:
         message = f":no_entry: GitHub IDが長すぎます。{err.max_length}文字以下の文字列を指定してください。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
     except models.GitHubUserNotFoundError as err:
         message = f":no_entry: GitHub ID({err.user_id})が存在しません。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
     except models.ModelError:
         logger.exception("An unknown exception raised while registering github id.")
         message = f":no_entry: GitHub ID({github_id})の登録に失敗しました。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
 
     message = f":white_check_mark: GitHub ID({github_id})を更新しました。"
-    await bot.message.sender.send(channel, content=message, force=True)
+    bot.message.sender.send(channel, content=message, force=True)
 
 
-async def unregister_github(user: discord.Member, channel: discord.TextChannel):
-    await register_if_not_exist(user)
+def unregister_github(user: discord.Member, channel: discord.TextChannel):
+    register_if_not_exist(user)
 
     try:
         services.github.unregister(user.id)
     except models.GitHubNotRegisteredError:
         message = f":no_entry: GitHub IDは登録されていません。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
     except models.ModelError:
         logger.exception("An unknown exception raised while unregistering github id.")
         message = f":no_entry: GitHub IDの登録解除に失敗しました。"
-        await bot.message.sender.send(channel, content=message, force=True)
+        bot.message.sender.send(channel, content=message, force=True)
         return
 
     message = f":white_check_mark: GitHub IDの登録を解除しました。"
-    await bot.message.sender.send(channel, content=message)
+    bot.message.sender.send(channel, content=message)

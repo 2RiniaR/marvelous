@@ -1,4 +1,4 @@
-from marvelous import settings, helpers, services, models
+from marvelous import settings, helpers, services, models, clock
 import logging
 
 
@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 def check_reset_time():
     reset_time = settings.marvelous.send_bonus.reset_time
-    if not helpers.time.is_now_time(reset_time):
+    if not clock.is_now_time(reset_time):
         return
     reset()
 
