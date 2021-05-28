@@ -78,7 +78,7 @@ https://github.com/watano1168/marvelous
 
 　次の朝、遅くまで寝ずに決まった時間（{(datetime.datetime.min + settings.sleeping_bonus.accept_wake_up_start_time).strftime('%H:%M')}〜{(datetime.datetime.min + settings.sleeping_bonus.accept_wake_up_end_time).strftime('%H:%M')}）に挨拶をすると、エライさんはあなたが早寝早起きをしたとして {settings.message.marvelous_point_symbol}{'{:+}'.format(settings.sleeping_bonus.point)} をプレゼントします。挨拶はなんでも構いません。健康な時間に目覚めましょう。
 
-　ただし、エライさんはあなたをちゃんと見ています。「おやすみ」の挨拶をした後、夜遅く（{(datetime.datetime.min + settings.sleeping_bonus.accept_sleep_end_time).strftime('%H:%M')}〜{(datetime.datetime.min + settings.sleeping_bonus.accept_sleep_start_time).strftime('%H:%M')}）に喋っていると、エライさんはあなたが早く寝ていないため、ポイントをあげません。
+　ただし、エライさんはあなたをちゃんと見ています。「おやすみ」の挨拶をした後、夜遅く（{(datetime.datetime.min + settings.sleeping_bonus.accept_sleep_end_time).strftime('%H:%M')}〜{(datetime.datetime.min + settings.sleeping_bonus.accept_wake_up_start_time).strftime('%H:%M')}）に喋っていると、エライさんはあなたが早く寝ていないため、ポイントをあげません。
 ```
 
 【コマンド一覧】
