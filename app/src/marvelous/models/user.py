@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass
 from typing import Optional
 from .daily_bonus import DailyBonus
@@ -13,4 +14,4 @@ class User:
     survival_bonus_given: bool = None
     point: int = None
     github_id: Optional[str] = None
-    sleeping: bool = None
+    slept_at: Optional[datetime.datetime] = None

@@ -19,10 +19,14 @@ from .reaction import (
     Reaction
 )
 
-from .super_marvelous import (
-    SuperMarvelousReaction, SuperMarvelousResult, SuperMarvelousSettings
-)
-
 from .user import (
     User
+)
+
+from .sleeping_bonus import (
+    Sleep, SleepContext, SleepStatus, SleepResult, WakeUp, WakeUpContext, WakeUpStatus, WakeUpResult
+)
+
+from .super_marvelous import (
+    SuperMarvelousReaction, SuperMarvelousResult, SuperMarvelousSettings
 )

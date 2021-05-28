@@ -15,8 +15,8 @@ async def on_ready():
 @commands.Cog.listener()
 async def on_message(message: discord.Message):
     presentation.help.show_on_mention(message)
-    presentation.sleeping_bonus.check_sleep(message.author, message)
-    presentation.sleeping_bonus.check_wake_up(message.author, message.channel)
+    presentation.sleeping_bonus.set_sleep(message.author, message)
+    presentation.sleeping_bonus.set_wake_up(message.author, message.channel)
     presentation.survival_bonus.check_give(message.author, message.channel)
 
 

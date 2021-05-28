@@ -31,9 +31,13 @@ def is_exist(user_id: int) -> bool:
 def update_cache(user_id: int) -> cache.user.UserContext:
     user = services.user.get_by_id(user_id)
     if user is None:
-        state = cache.user.UserContext(registered=False, survival_bonus_given=False)
+        state = cache.user.UserContext(registered=False)
     else:
-        state = cache.user.UserContext(registered=True, survival_bonus_given=user.survival_bonus_given)
+        state = cache.user.UserContext(
+            registered=True,
+            survival_bonus_given=user.survival_bonus_given,
+            sleeping=user.slept_at is not None
+        )
     cache.user.memory.set_state(user_id, state)
     return state
 
