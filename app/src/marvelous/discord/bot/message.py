@@ -9,7 +9,7 @@ from typing import Union
 logger = logging.getLogger(__name__)
 
 
-class DiscordMessageGateway:
+class MessageGateway:
     strict: bool
 
     def __init__(self):
@@ -59,4 +59,4 @@ class DiscordMessageGateway:
             self.strict = False
 
 
-sender = DiscordMessageGateway()
+sender = MessageGateway()

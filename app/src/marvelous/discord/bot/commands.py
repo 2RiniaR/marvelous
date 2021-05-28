@@ -4,12 +4,12 @@ from marvelous.discord import presentation, bot
 
 @commands.command()
 async def me(ctx: commands.Context):
-    await presentation.user.show_status(ctx.author, ctx.channel)
+    presentation.user.show_status(ctx.author, ctx.channel)
 
 
 @commands.command()
 async def ranking(ctx: commands.Context):
-    await presentation.ranking.show(ctx.channel)
+    presentation.ranking.show(ctx.channel)
 
 
 @commands.group()

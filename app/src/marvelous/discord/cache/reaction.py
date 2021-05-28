@@ -1,12 +1,12 @@
-import dataclasses
 import logging
+from dataclasses import dataclass
 from typing import Iterable, Dict
 
 
 logger = logging.getLogger(__name__)
 
 
-@dataclasses.dataclass()
+@dataclass
 class ReactionContext:
     guild_id: int
     user_id: int
@@ -15,7 +15,7 @@ class ReactionContext:
     emoji_str: str
 
 
-@dataclasses.dataclass()
+@dataclass
 class ReactionState:
     context: ReactionContext
     initial_state: bool

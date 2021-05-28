@@ -82,7 +82,7 @@ def response_to_marvelous(event: ReactionEvent):
     if event.reaction is None:
         return
     if settings.marvelous.random_message_count == event.reaction.count:
-        message = helpers.phrase.get_random_phrase(settings.message.phrases.praise_something, event.receiver.display_name)
+        message = helpers.phrase.get_random_phrase(settings.message.phrases.on_receive_many_marvelous, event.receiver.display_name)
         bot.message.sender.send(event.channel, content=message)
 
 
@@ -90,7 +90,7 @@ def response_to_booing(event: ReactionEvent):
     if event.reaction is None:
         return
     if settings.marvelous.random_message_count == event.reaction.count:
-        message = helpers.phrase.get_random_phrase(settings.message.phrases.comfort, event.receiver.display_name)
+        message = helpers.phrase.get_random_phrase(settings.message.phrases.on_receive_many_booing, event.receiver.display_name)
         bot.message.sender.send(event.channel, content=message)
 
 
@@ -101,7 +101,7 @@ def response_to_super_marvelous(event: ReactionEvent, reaction: models.SuperMarv
         message = (
             f"{':raised_hands: '}**【{str(event.receiver.display_name)}】**{' :raised_hands:'}"
             f"    *by {event.sender.display_name}*"
-            f"\n{helpers.phrase.get_random_phrase(settings.message.phrases.praise_something, event.receiver.display_name)}"
+            f"\n{helpers.phrase.get_random_phrase(settings.message.phrases.on_receive_super_marvelous, event.receiver.display_name)}"
         )
     bot.message.sender.send(event.channel, content=message)
 
