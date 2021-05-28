@@ -78,7 +78,7 @@ def set_wake_up(user: discord.Member, channel: discord.TextChannel):
     if wake_up.result.status == models.WakeUpStatus.Accepted:
         presentation.user.update_cache(user.id)
         message = helpers.phrase.get_random_phrase(settings.message.phrases.on_sleep_better, user.display_name)
-        message += f"  `👏{'{:+}'.format(settings.sleeping_bonus.point)}`"
+        message += f"  `{settings.message.marvelous_point_symbol}{'{:+}'.format(settings.sleeping_bonus.point)}`"
         bot.message.sender.send(channel, content=message)
     elif wake_up.result.status == models.WakeUpStatus.BeforeTerm:
         presentation.user.update_cache(user.id)

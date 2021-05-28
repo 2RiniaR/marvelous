@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def praise(user: discord.Member, channel: discord.TextChannel):
     message = helpers.phrase.get_random_phrase(settings.message.phrases.on_make_sure_survival, user.display_name)
-    message += f"  `👏{'{:+}'.format(settings.survival_bonus.point)}`"
+    message += f"  `{settings.message.marvelous_point_symbol}{'{:+}'.format(settings.survival_bonus.point)}`"
     bot.message.sender.send(channel, content=message, force=True)
 
 

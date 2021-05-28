@@ -54,7 +54,7 @@ def get_status_message(user: models.User) -> str:
     return "\n".join([
         f"```",
         f"【{user.display_name}】",
-        "累計 👏" + str(user.point),
+        "累計 " + settings.message.marvelous_point_symbol + str(user.point),
         f"使用可能 {settings.super_marvelous.reaction}" + str(max(0, user.super_marvelous_left)),
         f"",
         (

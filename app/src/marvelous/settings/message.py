@@ -17,12 +17,14 @@ class PhrasesSettings:
 class MessageSettings:
     strict_time: float
     ranking_limit: int
+    marvelous_point_symbol: str
     phrases: PhrasesSettings
 
 
 values = MessageSettings(
     strict_time=1.0,
     ranking_limit=8,
+    marvelous_point_symbol="✨",
     phrases=PhrasesSettings(
         on_receive_many_marvelous=[
             "えらいね、{name}！",

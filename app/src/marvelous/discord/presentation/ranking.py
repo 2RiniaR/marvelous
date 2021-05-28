@@ -10,11 +10,11 @@ logger = logging.getLogger(__name__)
 
 def get_message(users: Iterable[models.User]) -> str:
     def get_user_column(index: int, user: models.User) -> str:
-        return f"#{str(index + 1).zfill(2)} - {f'👏{user.point}'.rjust(4)}  {user.display_name}"
+        return f"#{str(index + 1).zfill(2)} - {f'{settings.message.marvelous_point_symbol}{user.point}'.rjust(4)}  {user.display_name}"
 
     return "\n".join([
         "```",
-        "👏👏👏 えらいポイント ランキング 👏👏👏",
+        f"【{settings.message.marvelous_point_symbol}えらいポイント ランキング】",
         "\n".join(map(lambda x: get_user_column(x[0], x[1]), enumerate(users))),
         "```"
     ])
