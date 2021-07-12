@@ -2,6 +2,11 @@
 
 えらいことをすると褒めてくれるDiscord bot。
 
+<img src="https://user-images.githubusercontent.com/45062199/125218816-a56eba80-e2fe-11eb-9581-9300f6323dd6.png" alt="説明画像1" width="80%">
+<img src="https://user-images.githubusercontent.com/45062199/125218820-a7387e00-e2fe-11eb-9b10-59c69f3ad787.png" alt="説明画像2" width="80%">
+<img src="https://user-images.githubusercontent.com/45062199/125218825-a7d11480-e2fe-11eb-8474-82f4503a9884.png" alt="説明画像3" width="80%">
+<img src="https://user-images.githubusercontent.com/45062199/125218826-a869ab00-e2fe-11eb-8680-29fafc30a795.png" alt="説明画像4" width="80%">
+
 
 ## 使い方
 
