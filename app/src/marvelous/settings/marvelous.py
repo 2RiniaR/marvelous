@@ -12,11 +12,11 @@ class MarvelousSettings:
 
 
 values = MarvelousSettings(
-    receive_point=1,
+    receive_point=2,
     send_bonus=BonusIntervalSettings(
-        step_interval=5,
+        step_interval=3,
         daily_step_limit=10,
-        point=1,
+        point=5,
         reset_time=datetime.time(4, 0)
     ),
     reaction="👏",

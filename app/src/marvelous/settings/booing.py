@@ -14,7 +14,7 @@ class BooingSettings:
 values = BooingSettings(
     receive_point=-1,
     send_penalty=BonusIntervalSettings(
-        step_interval=5,
+        step_interval=3,
         daily_step_limit=10,
         point=-1,
         reset_time=datetime.time(4, 0)
