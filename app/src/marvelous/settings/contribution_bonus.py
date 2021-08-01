@@ -10,5 +10,5 @@ class ContributionBonusSettings:
 
 values = ContributionBonusSettings(
     given_time=datetime.time(0, 1),
-    point=3
+    point=5
 )
